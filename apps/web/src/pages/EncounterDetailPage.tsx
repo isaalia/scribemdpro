@@ -3,11 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEncounterStore } from '../stores/encounterStore'
 import { usePatientStore } from '../stores/patientStore'
 import { ArrowLeft, Save, Mic, FileText, CheckCircle } from 'lucide-react'
+import { TranscriptionPanel } from '../components/TranscriptionPanel'
 
 export default function EncounterDetailPage() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { currentEncounter, loading, fetchEncounter, updateEncounter, signEncounter } = useEncounterStore()
+  const { currentEncounter, loading, fetchEncounter, updateEncounter, signEncounter, generateSOAP } = useEncounterStore()
   const { fetchPatient, currentPatient } = usePatientStore()
 
   useEffect(() => {
@@ -27,6 +28,22 @@ export default function EncounterDetailPage() {
       try {
         await signEncounter(id!)
         alert('Encounter signed successfully!')
+      } catch (error: any) {
+        alert(`Error: ${error.message}`)
+      }
+    }
+  }
+
+  const handleGenerateSOAP = async () => {
+    if (!currentEncounter?.raw_transcript) {
+      alert('Please complete transcription first before generating SOAP note.')
+      return
+    }
+
+    if (confirm('Generate SOAP note from transcript? This may take a few moments.')) {
+      try {
+        await generateSOAP(id!)
+        alert('SOAP note generated successfully!')
       } catch (error: any) {
         alert(`Error: ${error.message}`)
       }
@@ -127,60 +144,148 @@ export default function EncounterDetailPage() {
         )}
 
         {/* Transcription Section */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Transcription</h2>
-            {currentEncounter.status === 'in_progress' && (
-              <button className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600">
-                <Mic className="w-5 h-5" />
-                Start Recording
-              </button>
+        {currentEncounter.status === 'in_progress' ? (
+          <TranscriptionPanel encounterId={currentEncounter.id} />
+        ) : (
+          <div className="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Transcription</h2>
+            {currentEncounter.raw_transcript ? (
+              <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
+                <p className="text-gray-700 whitespace-pre-wrap">{currentEncounter.raw_transcript}</p>
+              </div>
+            ) : (
+              <div className="text-center py-12 text-gray-500">
+                <Mic className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                <p>No transcription available for this encounter.</p>
+              </div>
             )}
           </div>
-          {currentEncounter.raw_transcript ? (
-            <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
-              <p className="text-gray-700 whitespace-pre-wrap">{currentEncounter.raw_transcript}</p>
-            </div>
-          ) : (
-            <div className="text-center py-12 text-gray-500">
-              <Mic className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <p>No transcription yet. Click "Start Recording" to begin.</p>
-            </div>
-          )}
-        </div>
+        )}
 
         {/* SOAP Note Section */}
         {currentEncounter.soap_note ? (
           <div className="bg-white rounded-lg shadow p-6 mb-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-900">SOAP Note</h2>
-              <button className="text-primary-600 hover:text-primary-700 text-sm">
-                Generate SOAP Note
+              <button
+                onClick={handleGenerateSOAP}
+                className="text-primary-600 hover:text-primary-700 text-sm"
+              >
+                Regenerate
               </button>
             </div>
             <div className="space-y-4">
               {currentEncounter.soap_note.subjective && (
                 <div>
                   <h3 className="font-medium text-gray-900 mb-2">Subjective</h3>
-                  <p className="text-gray-700">{currentEncounter.soap_note.subjective}</p>
+                  {typeof currentEncounter.soap_note.subjective === 'object' ? (
+                    <div className="space-y-2">
+                      {currentEncounter.soap_note.subjective.chief_complaint && (
+                        <p><strong>Chief Complaint:</strong> {currentEncounter.soap_note.subjective.chief_complaint}</p>
+                      )}
+                      {currentEncounter.soap_note.subjective.hpi && (
+                        <p><strong>HPI:</strong> {currentEncounter.soap_note.subjective.hpi}</p>
+                      )}
+                      {currentEncounter.soap_note.subjective.ros && (
+                        <p><strong>ROS:</strong> {currentEncounter.soap_note.subjective.ros}</p>
+                      )}
+                      {currentEncounter.soap_note.subjective.note && (
+                        <p className="text-gray-700">{currentEncounter.soap_note.subjective.note}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-gray-700">{currentEncounter.soap_note.subjective}</p>
+                  )}
                 </div>
               )}
               {currentEncounter.soap_note.objective && (
                 <div>
                   <h3 className="font-medium text-gray-900 mb-2">Objective</h3>
-                  <p className="text-gray-700">{currentEncounter.soap_note.objective}</p>
+                  {typeof currentEncounter.soap_note.objective === 'object' ? (
+                    <div className="space-y-2">
+                      {currentEncounter.soap_note.objective.physical_exam && (
+                        <p><strong>Physical Exam:</strong> {currentEncounter.soap_note.objective.physical_exam}</p>
+                      )}
+                      {currentEncounter.soap_note.objective.vitals && (
+                        <p><strong>Vitals:</strong> {currentEncounter.soap_note.objective.vitals}</p>
+                      )}
+                      {currentEncounter.soap_note.objective.diagnostic_tests && (
+                        <p><strong>Diagnostic Tests:</strong> {currentEncounter.soap_note.objective.diagnostic_tests}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-gray-700">{currentEncounter.soap_note.objective}</p>
+                  )}
                 </div>
               )}
               {currentEncounter.soap_note.assessment && (
                 <div>
                   <h3 className="font-medium text-gray-900 mb-2">Assessment</h3>
-                  <p className="text-gray-700">{currentEncounter.soap_note.assessment}</p>
+                  {typeof currentEncounter.soap_note.assessment === 'object' ? (
+                    <div className="space-y-2">
+                      {currentEncounter.soap_note.assessment.primary_diagnosis && (
+                        <p><strong>Primary Diagnosis:</strong> {currentEncounter.soap_note.assessment.primary_diagnosis}</p>
+                      )}
+                      {currentEncounter.soap_note.assessment.differential_diagnosis && (
+                        <div>
+                          <strong>Differential Diagnosis:</strong>
+                          <ul className="list-disc list-inside ml-4">
+                            {currentEncounter.soap_note.assessment.differential_diagnosis.map((dx: string, i: number) => (
+                              <li key={i}>{dx}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-gray-700">{currentEncounter.soap_note.assessment}</p>
+                  )}
                 </div>
               )}
               {currentEncounter.soap_note.plan && (
                 <div>
                   <h3 className="font-medium text-gray-900 mb-2">Plan</h3>
-                  <p className="text-gray-700">{currentEncounter.soap_note.plan}</p>
+                  {typeof currentEncounter.soap_note.plan === 'object' ? (
+                    <div className="space-y-2">
+                      {currentEncounter.soap_note.plan.treatment && (
+                        <p><strong>Treatment:</strong> {currentEncounter.soap_note.plan.treatment}</p>
+                      )}
+                      {currentEncounter.soap_note.plan.medications && (
+                        <div>
+                          <strong>Medications:</strong>
+                          <ul className="list-disc list-inside ml-4">
+                            {currentEncounter.soap_note.plan.medications.map((med: string, i: number) => (
+                              <li key={i}>{med}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {currentEncounter.soap_note.plan.follow_up && (
+                        <p><strong>Follow-up:</strong> {currentEncounter.soap_note.plan.follow_up}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-gray-700">{currentEncounter.soap_note.plan}</p>
+                  )}
+                </div>
+              )}
+              {currentEncounter.soap_note.icd10_codes && currentEncounter.soap_note.icd10_codes.length > 0 && (
+                <div>
+                  <h3 className="font-medium text-gray-900 mb-2">ICD-10 Codes</h3>
+                  <div className="space-y-1">
+                    {currentEncounter.soap_note.icd10_codes.map((code: any, i: number) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{code.code}</span>
+                        <span className="text-gray-700">{code.description}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {currentEncounter.soap_note.em_level && (
+                <div>
+                  <h3 className="font-medium text-gray-900 mb-2">E/M Level</h3>
+                  <p className="text-gray-700">{currentEncounter.soap_note.em_level}</p>
                 </div>
               )}
             </div>
@@ -190,9 +295,13 @@ export default function EncounterDetailPage() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-900">SOAP Note</h2>
               {currentEncounter.raw_transcript && (
-                <button className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600">
+                <button
+                  onClick={handleGenerateSOAP}
+                  disabled={loading}
+                  className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <FileText className="w-5 h-5" />
-                  Generate SOAP Note
+                  {loading ? 'Generating...' : 'Generate SOAP Note'}
                 </button>
               )}
             </div>

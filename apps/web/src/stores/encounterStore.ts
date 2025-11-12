@@ -44,6 +44,7 @@ interface EncounterStore {
   updateEncounter: (id: string, encounter: Partial<Encounter>) => Promise<void>
   deleteEncounter: (id: string) => Promise<void>
   signEncounter: (id: string) => Promise<void>
+  generateSOAP: (id: string) => Promise<void>
 }
 
 export const useEncounterStore = create<EncounterStore>((set, get) => ({
@@ -186,6 +187,69 @@ export const useEncounterStore = create<EncounterStore>((set, get) => ({
           status: 'signed',
           signed_at: new Date().toISOString(),
           signed_by: user.id,
+        })
+        .eq('id', id)
+        .select()
+        .single()
+
+      if (error) throw error
+
+      set((state) => ({
+        encounters: state.encounters.map(e => e.id === id ? data : e),
+        currentEncounter: state.currentEncounter?.id === id ? data : state.currentEncounter,
+        loading: false,
+      }))
+    } catch (error: any) {
+      set({ error: error.message, loading: false })
+      throw error
+    }
+  },
+
+  generateSOAP: async (id: string) => {
+    set({ loading: true, error: null })
+    try {
+      const encounter = get().currentEncounter || get().encounters.find(e => e.id === id)
+      if (!encounter) throw new Error('Encounter not found')
+      if (!encounter.raw_transcript) throw new Error('No transcript available. Please complete transcription first.')
+
+      // Get patient info for context
+      const { data: patient } = await supabase
+        .from('patients')
+        .select('date_of_birth')
+        .eq('id', encounter.patient_id)
+        .single()
+
+      const patientAge = patient?.date_of_birth 
+        ? Math.floor((Date.now() - new Date(patient.date_of_birth).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+        : undefined
+
+      // Call SOAP generation API
+      const response = await fetch('/api/soap/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          encounter_id: id,
+          transcript: encounter.raw_transcript,
+          encounter_type: encounter.encounter_type,
+          patient_age: patientAge,
+          chief_complaint: encounter.chief_complaint,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to generate SOAP note')
+      }
+
+      const { soap_note } = await response.json()
+
+      // Update encounter with SOAP note
+      const { data, error } = await supabase
+        .from('encounters')
+        .update({
+          soap_note,
+          status: 'completed',
+          completed_at: new Date().toISOString(),
         })
         .eq('id', id)
         .select()
