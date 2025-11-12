@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePatientStore } from '../stores/patientStore'
-import { Plus, Search, Edit, Trash2, User } from 'lucide-react'
+import { Plus, Search, Edit, Trash2, User, FileText } from 'lucide-react'
 
 export default function PatientsPage() {
   const navigate = useNavigate()
@@ -168,14 +168,23 @@ export default function PatientsPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex justify-end gap-2">
                         <button
+                          onClick={() => navigate(`/encounters/new?patientId=${patient.id}`)}
+                          className="text-green-600 hover:text-green-900"
+                          title="New Encounter"
+                        >
+                          <FileText className="w-5 h-5" />
+                        </button>
+                        <button
                           onClick={() => navigate(`/patients/${patient.id}`)}
                           className="text-primary-600 hover:text-primary-900"
+                          title="Edit"
                         >
                           <Edit className="w-5 h-5" />
                         </button>
                         <button
                           onClick={() => handleDelete(patient.id)}
                           className="text-red-600 hover:text-red-900"
+                          title="Delete"
                         >
                           <Trash2 className="w-5 h-5" />
                         </button>

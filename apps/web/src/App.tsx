@@ -4,6 +4,8 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import PatientsPage from './pages/PatientsPage'
 import PatientFormPage from './pages/PatientFormPage'
+import EncountersPage from './pages/EncountersPage'
+import EncounterFormPage from './pages/EncounterFormPage'
 
 function App() {
   const { user, loading } = useAuthStore()
@@ -50,6 +52,10 @@ function App() {
       <Route path="/patients" element={user ? <PatientsPage /> : <Navigate to="/login" />} />
       <Route path="/patients/new" element={user ? <PatientFormPage /> : <Navigate to="/login" />} />
       <Route path="/patients/:id" element={user ? <PatientFormPage /> : <Navigate to="/login" />} />
+      <Route path="/encounters" element={user ? <EncountersPage /> : <Navigate to="/login" />} />
+      <Route path="/encounters/new" element={user ? <EncounterFormPage /> : <Navigate to="/login" />} />
+      <Route path="/encounters/:id" element={user ? <EncounterFormPage /> : <Navigate to="/login" />} />
+      <Route path="/patients/:patientId/encounters" element={user ? <EncountersPage /> : <Navigate to="/login" />} />
     </Routes>
   )
 }

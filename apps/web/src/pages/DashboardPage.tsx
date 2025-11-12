@@ -31,6 +31,12 @@ export default function DashboardPage() {
                 >
                   Patients
                 </button>
+                <button
+                  onClick={() => navigate('/encounters')}
+                  className="text-sm font-medium text-gray-700 hover:text-primary-600"
+                >
+                  Encounters
+                </button>
               </nav>
             </div>
             <div className="flex items-center gap-4">
@@ -121,6 +127,7 @@ export default function DashboardPage() {
             </button>
 
             <button
+              onClick={() => navigate('/encounters/new')}
               className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors text-left"
             >
               <div className="bg-green-100 rounded p-2">
