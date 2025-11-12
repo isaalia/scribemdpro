@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from './stores/authStore'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
+import PatientsPage from './pages/PatientsPage'
+import PatientFormPage from './pages/PatientFormPage'
 
 function App() {
   const { user, loading } = useAuthStore()
@@ -45,6 +47,9 @@ function App() {
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
       <Route path="/" element={user ? <DashboardPage /> : <Navigate to="/login" />} />
+      <Route path="/patients" element={user ? <PatientsPage /> : <Navigate to="/login" />} />
+      <Route path="/patients/new" element={user ? <PatientFormPage /> : <Navigate to="/login" />} />
+      <Route path="/patients/:id" element={user ? <PatientFormPage /> : <Navigate to="/login" />} />
     </Routes>
   )
 }
