@@ -142,7 +142,14 @@ export default function EncountersPage() {
                     <button
                       onClick={() => navigate(`/encounters/${encounter.id}`)}
                       className="text-primary-600 hover:text-primary-900"
-                      title="View/Edit"
+                      title="View"
+                    >
+                      <FileText className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => navigate(`/encounters/${encounter.id}/edit`)}
+                      className="text-primary-600 hover:text-primary-900"
+                      title="Edit"
                     >
                       <Edit className="w-5 h-5" />
                     </button>
