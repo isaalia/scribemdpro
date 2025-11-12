@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "cd ../.. && npm run build --workspace=apps/web",
   "outputDirectory": "dist",
   "framework": "vite",
   "installCommand": "npm install --prefix=../..",
