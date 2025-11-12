@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { usePatientStore, Patient } from '../stores/patientStore'
+import { usePatientStore } from '../stores/patientStore'
+import type { Patient } from '../stores/patientStore'
 import { ArrowLeft, Save } from 'lucide-react'
 
 export default function PatientFormPage() {
