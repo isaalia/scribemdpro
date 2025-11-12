@@ -34,7 +34,7 @@ interface PatientStore {
   searchPatients: (query: string) => Promise<Patient[]>
 }
 
-export const usePatientStore = create<PatientStore>((set, get) => ({
+export const usePatientStore = create<PatientStore>((set) => ({
   patients: [],
   currentPatient: null,
   loading: false,
