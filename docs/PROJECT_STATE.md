@@ -109,8 +109,10 @@ scribemd-pro/
 - [ ] Password reset
 - [x] Patient management CRUD ✅ (List, Create, Edit, Delete working)
 - [x] Encounter management CRUD ✅ (List, Create, Edit, View, Sign working)
-- [ ] Real-time transcription (Deepgram)
-- [ ] SOAP note generation (Claude)
+- [x] Transcription component ✅ (UI ready, API endpoints created)
+- [x] SOAP note generation API ✅ (Claude integration ready)
+- [ ] Real-time transcription (Deepgram WebSocket - needs testing)
+- [ ] Complete SOAP generation flow (needs testing)
 - [ ] Template system
 - [ ] Vital signs tracking
 - [ ] File uploads
