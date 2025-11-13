@@ -8,6 +8,8 @@ import PatientFormPage from './pages/PatientFormPage'
 import EncountersPage from './pages/EncountersPage'
 import EncounterFormPage from './pages/EncounterFormPage'
 import EncounterDetailPage from './pages/EncounterDetailPage'
+import TemplatesPage from './pages/TemplatesPage'
+import TemplateFormPage from './pages/TemplateFormPage'
 
 function App() {
   const { user, loading } = useAuthStore()
@@ -60,6 +62,9 @@ function App() {
       <Route path="/encounters/:id/edit" element={user ? <EncounterFormPage /> : <Navigate to="/login" />} />
       <Route path="/encounters/:id" element={user ? <EncounterDetailPage /> : <Navigate to="/login" />} />
       <Route path="/patients/:patientId/encounters" element={user ? <EncountersPage /> : <Navigate to="/login" />} />
+      <Route path="/templates" element={user ? <TemplatesPage /> : <Navigate to="/login" />} />
+      <Route path="/templates/new" element={user ? <TemplateFormPage /> : <Navigate to="/login" />} />
+      <Route path="/templates/:id/edit" element={user ? <TemplateFormPage /> : <Navigate to="/login" />} />
     </Routes>
   )
 }
