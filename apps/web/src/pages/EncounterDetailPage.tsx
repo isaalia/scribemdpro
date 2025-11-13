@@ -5,6 +5,7 @@ import { usePatientStore } from '../stores/patientStore'
 import { ArrowLeft, Save, Mic, FileText, CheckCircle } from 'lucide-react'
 import { TranscriptionPanel } from '../components/TranscriptionPanel'
 import { VitalSignsPanel } from '../components/VitalSignsPanel'
+import { FileUploadPanel } from '../components/FileUploadPanel'
 import { Navigation } from '../components/Navigation'
 
 export default function EncounterDetailPage() {
@@ -364,6 +365,19 @@ export default function EncounterDetailPage() {
             )}
           </div>
         )}
+
+        {/* File Attachments */}
+        <div className="mb-6">
+          <FileUploadPanel
+            encounterId={currentEncounter.id}
+            initialFiles={currentEncounter.files || []}
+            onFilesChange={() => {
+              if (id) {
+                fetchEncounter(id)
+              }
+            }}
+          />
+        </div>
 
         {/* Clinical Intelligence */}
         {currentEncounter.icd10_codes && currentEncounter.icd10_codes.length > 0 && (
