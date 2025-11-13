@@ -7,6 +7,7 @@ import { TranscriptionPanel } from '../components/TranscriptionPanel'
 import { VitalSignsPanel } from '../components/VitalSignsPanel'
 import { FileUploadPanel } from '../components/FileUploadPanel'
 import { ICD10Suggestions } from '../components/ICD10Suggestions'
+import { EMLevelCalculator } from '../components/EMLevelCalculator'
 import { Navigation } from '../components/Navigation'
 
 export default function EncounterDetailPage() {
@@ -380,12 +381,24 @@ export default function EncounterDetailPage() {
           />
         </div>
 
-        {/* ICD-10 Code Suggestions */}
-        <div className="mb-6">
+        {/* Clinical Intelligence Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* ICD-10 Code Suggestions */}
           <ICD10Suggestions
             encounterId={currentEncounter.id}
             encounter={currentEncounter}
             onCodesUpdate={() => {
+              if (id) {
+                fetchEncounter(id)
+              }
+            }}
+          />
+
+          {/* E/M Level Calculator */}
+          <EMLevelCalculator
+            encounterId={currentEncounter.id}
+            encounter={currentEncounter}
+            onLevelUpdate={() => {
               if (id) {
                 fetchEncounter(id)
               }

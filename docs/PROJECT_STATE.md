@@ -120,7 +120,7 @@ scribemd-pro/
 - [x] File uploads ✅ (Supabase Storage integration, file management UI, RLS policies needed)
 
 ### PHASE 3: Clinical Intelligence (Week 2-3)
-- [ ] ICD-10 code suggestions
+- [x] ICD-10 code suggestions ✅ (AI-powered suggestions with Claude, select/deselect codes)
 - [ ] E/M level calculator
 - [ ] Drug interaction warnings
 - [ ] Red flag detection
