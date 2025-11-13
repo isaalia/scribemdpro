@@ -112,10 +112,17 @@ export default function SignupPage() {
         password: formData.password,
       })
 
-      if (signInError) throw signInError
+      if (signInError) {
+        // If sign-in fails, user might need to confirm email
+        // Check if email confirmation is required
+        if (signInError.message.includes('email') || signInError.message.includes('confirm')) {
+          throw new Error('Please check your email to confirm your account before signing in.')
+        }
+        throw signInError
+      }
 
-      // Success! Redirect to dashboard
-      navigate('/')
+      // Success! Refresh the page to load user data
+      window.location.href = '/'
     } catch (err: any) {
       console.error('Signup error:', err)
       setError(err.message || 'Failed to create account. Please try again.')
