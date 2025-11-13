@@ -116,7 +116,7 @@ scribemd-pro/
 - [x] Real-time transcription (Deepgram integration complete ✅ - needs DEEPGRAM_API_KEY env var)
 - [x] Complete SOAP generation flow ✅ (Improved UX, error handling, auto-refresh)
 - [x] Template system ✅ (CRUD operations, template management UI, RLS policies)
-- [ ] Vital signs tracking
+- [x] Vital signs tracking ✅ (Full vital signs panel with BMI calculation, abnormal detection)
 - [ ] File uploads
 
 ### PHASE 3: Clinical Intelligence (Week 2-3)

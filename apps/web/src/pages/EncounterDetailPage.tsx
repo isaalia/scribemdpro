@@ -159,15 +159,17 @@ export default function EncounterDetailPage() {
         )}
 
         {/* Vital Signs */}
-        <VitalSignsPanel
-          encounterId={currentEncounter.id}
-          initialVitals={currentEncounter.vitals}
-          onSave={() => {
-            if (id) {
-              fetchEncounter(id)
-            }
-          }}
-        />
+        <div className="mb-6">
+          <VitalSignsPanel
+            encounterId={currentEncounter.id}
+            initialVitals={currentEncounter.vitals}
+            onSave={() => {
+              if (id) {
+                fetchEncounter(id)
+              }
+            }}
+          />
+        </div>
 
         {/* Transcription Section */}
         {currentEncounter.status === 'in_progress' ? (
