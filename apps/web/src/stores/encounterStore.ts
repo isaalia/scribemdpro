@@ -177,35 +177,58 @@ export const useEncounterStore = create<EncounterStore>((set, get) => ({
   },
 
     signEncounter: async (id: string) => {
-      const { sendEmail } = useEmailStore.getState()
-    set({ loading: true, error: null })
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
+      set({ loading: true, error: null })
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) throw new Error('Not authenticated')
 
-      const { data, error } = await supabase
-        .from('encounters')
-        .update({
-          status: 'signed',
-          signed_at: new Date().toISOString(),
-          signed_by: user.id,
-        })
-        .eq('id', id)
-        .select()
-        .single()
+        const { data, error } = await supabase
+          .from('encounters')
+          .update({
+            status: 'signed',
+            signed_at: new Date().toISOString(),
+            signed_by: user.id,
+          })
+          .eq('id', id)
+          .select(`
+            *,
+            patients (*),
+            users (*)
+          `)
+          .single()
 
-      if (error) throw error
+        if (error) throw error
 
-      set((state) => ({
-        encounters: state.encounters.map(e => e.id === id ? data : e),
-        currentEncounter: state.currentEncounter?.id === id ? data : state.currentEncounter,
-        loading: false,
-      }))
-    } catch (error: any) {
-      set({ error: error.message, loading: false })
-      throw error
-    }
-  },
+        set((state) => ({
+          encounters: state.encounters.map(e => e.id === id ? data : e),
+          currentEncounter: state.currentEncounter?.id === id ? data : state.currentEncounter,
+          loading: false,
+        }))
+
+        // Send email notification (non-blocking)
+        try {
+          const { sendEmail } = useEmailStore.getState()
+          await sendEmail({
+            to: (data.users as any)?.email || '',
+            subject: 'Encounter Signed - ScribeMD Pro',
+            template: 'encounter_signed',
+            data: {
+              patientName: `${(data.patients as any)?.first_name} ${(data.patients as any)?.last_name}`,
+              providerName: (data.users as any)?.full_name,
+              encounterDate: new Date(data.encounter_date).toLocaleDateString(),
+              encounterType: data.encounter_type?.replace('_', ' '),
+              encounterUrl: `${typeof window !== 'undefined' ? window.location.origin : ''}/encounters/${id}`,
+            },
+          })
+        } catch (emailError) {
+          console.error('Failed to send email notification:', emailError)
+          // Don't fail the sign operation if email fails
+        }
+      } catch (error: any) {
+        set({ error: error.message, loading: false })
+        throw error
+      }
+    },
 
   generateSOAP: async (id: string) => {
     set({ loading: true, error: null })
