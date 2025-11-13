@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEncounterStore } from '../stores/encounterStore'
 import { usePatientStore } from '../stores/patientStore'
@@ -35,18 +35,30 @@ export default function EncounterDetailPage() {
     }
   }
 
+  const [isGeneratingSOAP, setIsGeneratingSOAP] = useState(false)
+  const [soapError, setSoapError] = useState('')
+
   const handleGenerateSOAP = async () => {
     if (!currentEncounter?.raw_transcript) {
-      alert('Please complete transcription first before generating SOAP note.')
+      setSoapError('Please complete transcription first before generating SOAP note.')
       return
     }
 
     if (confirm('Generate SOAP note from transcript? This may take a few moments.')) {
+      setIsGeneratingSOAP(true)
+      setSoapError('')
       try {
         await generateSOAP(id!)
-        alert('SOAP note generated successfully!')
+        // Refresh encounter to get updated SOAP note
+        if (id) {
+          await fetchEncounter(id)
+        }
+        setSoapError('')
       } catch (error: any) {
-        alert(`Error: ${error.message}`)
+        setSoapError(error.message || 'Failed to generate SOAP note. Please try again.')
+        console.error('SOAP generation error:', error)
+      } finally {
+        setIsGeneratingSOAP(false)
       }
     }
   }
@@ -299,11 +311,11 @@ export default function EncounterDetailPage() {
               {currentEncounter.raw_transcript && (
                 <button
                   onClick={handleGenerateSOAP}
-                  disabled={loading}
+                  disabled={isGeneratingSOAP || loading}
                   className="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <FileText className="w-5 h-5" />
-                  {loading ? 'Generating...' : 'Generate SOAP Note'}
+                  {isGeneratingSOAP ? 'Generating...' : 'Generate SOAP Note'}
                 </button>
               )}
             </div>
@@ -311,6 +323,17 @@ export default function EncounterDetailPage() {
               <p className="text-gray-500 text-center py-8">
                 Complete transcription first to generate SOAP note
               </p>
+            )}
+            {soapError && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mt-4">
+                {soapError}
+              </div>
+            )}
+            {isGeneratingSOAP && (
+              <div className="flex items-center gap-2 text-primary-600 mt-4">
+                <div className="w-4 h-4 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
+                <span className="text-sm">Generating SOAP note from transcript...</span>
+              </div>
             )}
           </div>
         )}
