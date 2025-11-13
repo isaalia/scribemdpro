@@ -30,10 +30,13 @@ export default function EncounterDetailPage() {
     }
   }, [currentEncounter?.patient_id, fetchPatient])
 
-  const handleSign = async () => {
+  const handleSignEncounter = async () => {
     if (confirm('Are you sure you want to sign this encounter? This will finalize the documentation.')) {
       try {
         await signEncounter(id!)
+        if (id) {
+          await fetchEncounter(id)
+        }
         alert('Encounter signed successfully!')
       } catch (error: any) {
         alert(`Error: ${error.message}`)
