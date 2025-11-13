@@ -6,6 +6,7 @@ import { ArrowLeft, Save, Mic, FileText, CheckCircle } from 'lucide-react'
 import { TranscriptionPanel } from '../components/TranscriptionPanel'
 import { VitalSignsPanel } from '../components/VitalSignsPanel'
 import { FileUploadPanel } from '../components/FileUploadPanel'
+import { ICD10Suggestions } from '../components/ICD10Suggestions'
 import { Navigation } from '../components/Navigation'
 
 export default function EncounterDetailPage() {
@@ -379,15 +380,33 @@ export default function EncounterDetailPage() {
           />
         </div>
 
-        {/* Clinical Intelligence */}
+        {/* ICD-10 Code Suggestions */}
+        <div className="mb-6">
+          <ICD10Suggestions
+            encounterId={currentEncounter.id}
+            encounter={currentEncounter}
+            onCodesUpdate={() => {
+              if (id) {
+                fetchEncounter(id)
+              }
+            }}
+          />
+        </div>
+
+        {/* Clinical Intelligence - Display Selected Codes */}
         {currentEncounter.icd10_codes && currentEncounter.icd10_codes.length > 0 && (
           <div className="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">ICD-10 Codes</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Selected ICD-10 Codes</h2>
             <div className="space-y-2">
               {currentEncounter.icd10_codes.map((code: any, index: number) => (
-                <div key={index} className="flex items-center gap-3">
-                  <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{code.code}</span>
+                <div key={index} className="flex items-center gap-3 p-2 bg-gray-50 rounded">
+                  <span className="font-mono text-sm font-semibold bg-white px-2 py-1 rounded border">{code.code}</span>
                   <span className="text-gray-700">{code.description}</span>
+                  {code.confidence && (
+                    <span className="text-xs text-gray-500 ml-auto">
+                      {(code.confidence * 100).toFixed(0)}% confidence
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
