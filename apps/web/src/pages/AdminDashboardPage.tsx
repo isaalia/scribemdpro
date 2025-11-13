@@ -164,7 +164,7 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <button
             onClick={() => navigate('/admin/practices')}
-            className="bg-white rounded-lg shadow p-6 text-left hover:shadow-lg transition-shadow"
+            className="bg-white rounded-lg shadow p-6 text-left hover:shadow-lg transition-shadow w-full"
           >
             <div className="flex items-center gap-3 mb-2">
               <Building2 className="w-6 h-6 text-blue-600" />
@@ -193,6 +193,28 @@ export default function AdminDashboardPage() {
               <h3 className="text-lg font-semibold text-gray-900">Subscriptions</h3>
             </div>
             <p className="text-sm text-gray-600">View and manage subscription plans</p>
+          </button>
+
+          <button
+            onClick={() => navigate('/admin/analytics')}
+            className="bg-white rounded-lg shadow p-6 text-left hover:shadow-lg transition-shadow w-full"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <TrendingUp className="w-6 h-6 text-green-600" />
+              <h3 className="text-lg font-semibold text-gray-900">Analytics</h3>
+            </div>
+            <p className="text-sm text-gray-600">View system-wide metrics and insights</p>
+          </button>
+
+          <button
+            onClick={() => navigate('/admin/billing')}
+            className="bg-white rounded-lg shadow p-6 text-left hover:shadow-lg transition-shadow w-full"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <DollarSign className="w-6 h-6 text-blue-600" />
+              <h3 className="text-lg font-semibold text-gray-900">Billing</h3>
+            </div>
+            <p className="text-sm text-gray-600">Manage invoices and billing records</p>
           </button>
         </div>
 
