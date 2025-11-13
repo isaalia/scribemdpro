@@ -83,7 +83,14 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Signup disabled - admin creates accounts */}
+        <div className="mt-4 text-center">
+          <Link
+            to="/forgot-password"
+            className="text-sm text-primary-600 hover:text-primary-700"
+          >
+            Forgot your password?
+          </Link>
+        </div>
       </div>
     </div>
   )
