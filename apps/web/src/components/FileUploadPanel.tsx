@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Upload, X, FileText, Download, Trash2, Loader2 } from 'lucide-react'
+import { Upload, FileText, Download, Trash2, Loader2 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useEncounterStore } from '../stores/encounterStore'
 
@@ -50,7 +50,7 @@ export function FileUploadPanel({ encounterId, initialFiles = [], onFilesChange 
         const filePath = `${userData.practice_id}/encounters/${encounterId}/${fileId}`
 
         // Upload to Supabase Storage
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('patient-files')
           .upload(filePath, file, {
             cacheControl: '3600',
