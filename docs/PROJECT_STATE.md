@@ -115,7 +115,7 @@ scribemd-pro/
 - [x] SOAP note generation API ✅ (Claude integration ready)
 - [x] Real-time transcription (Deepgram integration complete ✅ - needs DEEPGRAM_API_KEY env var)
 - [x] Complete SOAP generation flow ✅ (Improved UX, error handling, auto-refresh)
-- [ ] Template system
+- [x] Template system ✅ (CRUD operations, template management UI, RLS policies)
 - [ ] Vital signs tracking
 - [ ] File uploads
 
