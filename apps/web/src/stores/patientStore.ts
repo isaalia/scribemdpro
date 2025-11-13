@@ -107,8 +107,17 @@ export const usePatientStore = create<PatientStore>((set) => ({
       
       set((state) => ({
         patients: [...state.patients, data],
+        currentPatient: data,
         loading: false,
       }))
+
+      // Audit log
+      await logAuditEvent({
+        action: AuditActions.CREATE,
+        resource_type: ResourceTypes.PATIENT,
+        resource_id: data.id,
+        metadata: { patient_name: `${data.first_name} ${data.last_name}` },
+      })
       
       return data
     } catch (error: any) {
