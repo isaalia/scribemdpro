@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from './stores/authStore'
 import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
 import DashboardPage from './pages/DashboardPage'
 import PatientsPage from './pages/PatientsPage'
 import PatientFormPage from './pages/PatientFormPage'
@@ -49,6 +50,7 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
+      <Route path="/signup" element={user ? <Navigate to="/" /> : <SignupPage />} />
       <Route path="/" element={user ? <DashboardPage /> : <Navigate to="/login" />} />
       <Route path="/patients" element={user ? <PatientsPage /> : <Navigate to="/login" />} />
       <Route path="/patients/new" element={user ? <PatientFormPage /> : <Navigate to="/login" />} />
