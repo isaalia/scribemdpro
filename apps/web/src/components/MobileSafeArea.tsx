@@ -11,8 +11,14 @@ export function MobileSafeArea({ children }: MobileSafeAreaProps) {
 
   useEffect(() => {
     if (Capacitor.isNativePlatform()) {
-      SafeArea.getSafeAreaInsets().then((insets) => {
-        setSafeAreaInsets(insets)
+      // Use CSS safe-area-inset variables which Capacitor provides automatically
+      const root = document.documentElement
+      const computedStyle = getComputedStyle(root)
+      setSafeAreaInsets({
+        top: parseInt(computedStyle.getPropertyValue('--safe-area-inset-top') || '0'),
+        bottom: parseInt(computedStyle.getPropertyValue('--safe-area-inset-bottom') || '0'),
+        left: parseInt(computedStyle.getPropertyValue('--safe-area-inset-left') || '0'),
+        right: parseInt(computedStyle.getPropertyValue('--safe-area-inset-right') || '0'),
       })
     }
   }, [])
