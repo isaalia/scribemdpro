@@ -131,9 +131,10 @@ export default function EncounterDetailPage() {
               </p>
             </div>
             <div className="flex gap-2">
+              <ExportPDFButton encounterId={currentEncounter.id} />
               {currentEncounter.status !== 'signed' && (
                 <button
-                  onClick={handleSign}
+                  onClick={handleSignEncounter}
                   className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                 >
                   <CheckCircle className="w-5 h-5" />

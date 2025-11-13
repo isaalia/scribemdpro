@@ -136,8 +136,8 @@ scribemd-pro/
 - [x] Team/practice management ✅ (Practice CRUD, user counts, subscription status, quick actions)
 
 ### PHASE 5: Integrations (Week 3-4)
-- [ ] DrChrono OAuth
-- [ ] Export to PDF/DOCX
+- [x] DrChrono OAuth ✅ (OAuth flow, token storage, integration management)
+- [x] Export to PDF/DOCX ✅ (PDF export API, HTML generation, print/save functionality)
 - [ ] Email notifications
 - [ ] Calendar integration
 - [ ] Lab result imports
