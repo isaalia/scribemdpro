@@ -117,7 +117,7 @@ scribemd-pro/
 - [x] Complete SOAP generation flow ✅ (Improved UX, error handling, auto-refresh)
 - [x] Template system ✅ (CRUD operations, template management UI, RLS policies)
 - [x] Vital signs tracking ✅ (Full vital signs panel with BMI calculation, abnormal detection)
-- [ ] File uploads
+- [x] File uploads ✅ (Supabase Storage integration, file management UI, RLS policies needed)
 
 ### PHASE 3: Clinical Intelligence (Week 2-3)
 - [ ] ICD-10 code suggestions
