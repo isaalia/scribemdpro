@@ -1,56 +1,13 @@
-import { useAuthStore } from '../stores/authStore'
 import { useNavigate } from 'react-router-dom'
-import { Users, FileText, Calendar, Settings } from 'lucide-react'
+import { Users, FileText, Calendar } from 'lucide-react'
+import { Navigation } from '../components/Navigation'
 
 export default function DashboardPage() {
-  const { user, logout } = useAuthStore()
   const navigate = useNavigate()
-
-  const handleLogout = async () => {
-    await logout()
-    navigate('/login')
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-8">
-              <h1 className="text-xl font-bold text-gray-900">ScribeMD Pro</h1>
-              <nav className="flex gap-4">
-                <button
-                  onClick={() => navigate('/')}
-                  className="text-sm font-medium text-gray-700 hover:text-primary-600"
-                >
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => navigate('/patients')}
-                  className="text-sm font-medium text-gray-700 hover:text-primary-600"
-                >
-                  Patients
-                </button>
-                <button
-                  onClick={() => navigate('/encounters')}
-                  className="text-sm font-medium text-gray-700 hover:text-primary-600"
-                >
-                  Encounters
-                </button>
-              </nav>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">{user?.full_name}</span>
-              <button
-                onClick={handleLogout}
-                className="text-sm text-gray-600 hover:text-gray-900"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
