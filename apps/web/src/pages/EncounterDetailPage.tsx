@@ -407,6 +407,14 @@ export default function EncounterDetailPage() {
           />
         </div>
 
+        {/* Clinical Intelligence Analysis */}
+        <div className="mb-6">
+          <ClinicalIntelligence
+            encounter={currentEncounter}
+            patientAge={currentPatient ? Math.floor((Date.now() - new Date(currentPatient.date_of_birth).getTime()) / (365.25 * 24 * 60 * 60 * 1000)) : undefined}
+          />
+        </div>
+
         {/* Clinical Intelligence - Display Selected Codes */}
         {currentEncounter.icd10_codes && currentEncounter.icd10_codes.length > 0 && (
           <div className="bg-white rounded-lg shadow p-6 mb-6">

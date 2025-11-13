@@ -122,10 +122,10 @@ scribemd-pro/
 ### PHASE 3: Clinical Intelligence (Week 2-3)
 - [x] ICD-10 code suggestions ✅ (AI-powered suggestions with Claude, select/deselect codes)
 - [x] E/M level calculator ✅ (AI and manual calculation modes, CMS guidelines compliant)
-- [ ] Drug interaction warnings
-- [ ] Red flag detection
-- [ ] Differential diagnosis
-- [ ] Smart vitals interpretation
+- [x] Drug interaction warnings ✅ (Integrated in ClinicalIntelligence component)
+- [x] Red flag detection ✅ (Severity-based alerts with recommendations)
+- [x] Differential diagnosis ✅ (AI-powered differential with likelihood scores)
+- [x] Smart vitals interpretation ✅ (Automatic abnormality detection in ClinicalIntelligence)
 
 ### PHASE 4: Admin & Business (Week 3)
 - [ ] Admin dashboard
