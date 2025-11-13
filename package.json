@@ -13,9 +13,15 @@
     "dev:web": "turbo run dev --filter=web",
     "dev:admin": "turbo run dev --filter=admin",
     "build": "turbo run build",
+    "build:web": "turbo run build --filter=web",
+    "build:ios": "cd apps/web && npm run build && npx cap sync ios && npx cap open ios",
+    "build:android": "cd apps/web && npm run build && npx cap sync android && npx cap open android",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "cap:sync": "cd apps/web && npx cap sync",
+    "cap:open:ios": "cd apps/web && npx cap open ios",
+    "cap:open:android": "cd apps/web && npx cap open android"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
