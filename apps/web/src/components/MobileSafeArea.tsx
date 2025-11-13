@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Capacitor } from '@capacitor/core'
-import { SafeArea } from 'capacitor-plugin-safe-area'
 
 interface MobileSafeAreaProps {
   children: React.ReactNode
