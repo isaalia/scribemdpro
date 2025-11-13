@@ -265,7 +265,7 @@ export default function AdminAnalyticsPage() {
                     <div
                       className="bg-primary-500 h-2 rounded-full"
                       style={{
-                        width: `${(item.count / Math.max(...analytics.encountersByMonth.map((e) => e.count), 1)) * 100)}%`,
+                        width: `${(item.count / Math.max(...analytics.encountersByMonth.map((e) => e.count), 1)) * 100}%`,
                       }}
                     />
                   </div>
@@ -288,7 +288,7 @@ export default function AdminAnalyticsPage() {
                     <div
                       className="bg-green-500 h-2 rounded-full"
                       style={{
-                        width: `${(item.count / Math.max(...analytics.encountersByType.map((e) => e.count), 1)) * 100)}%`,
+                        width: `${(item.count / Math.max(...analytics.encountersByType.map((e) => e.count), 1)) * 100}%`,
                       }}
                     />
                   </div>
