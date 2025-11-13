@@ -10,6 +10,8 @@ import { ICD10Suggestions } from '../components/ICD10Suggestions'
 import { EMLevelCalculator } from '../components/EMLevelCalculator'
 import { ClinicalIntelligence } from '../components/ClinicalIntelligence'
 import { ExportPDFButton } from '../components/ExportPDFButton'
+import { CalendarExportButton } from '../components/CalendarExportButton'
+import { LabImportButton } from '../components/LabImportButton'
 import { Navigation } from '../components/Navigation'
 
 export default function EncounterDetailPage() {
@@ -133,8 +135,17 @@ export default function EncounterDetailPage() {
                 {formatDate(currentEncounter.encounter_date)}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <ExportPDFButton encounterId={currentEncounter.id} />
+              <CalendarExportButton encounterId={currentEncounter.id} />
+              <LabImportButton
+                encounterId={currentEncounter.id}
+                onImportComplete={() => {
+                  if (id) {
+                    fetchEncounter(id)
+                  }
+                }}
+              />
               {currentEncounter.status !== 'signed' && (
                 <button
                   onClick={handleSignEncounter}

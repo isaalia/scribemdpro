@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
+import { useEmailStore } from './emailStore'
 
 export interface Encounter {
   id: string
@@ -175,7 +176,8 @@ export const useEncounterStore = create<EncounterStore>((set, get) => ({
     }
   },
 
-  signEncounter: async (id: string) => {
+    signEncounter: async (id: string) => {
+      const { sendEmail } = useEmailStore.getState()
     set({ loading: true, error: null })
     try {
       const { data: { user } } = await supabase.auth.getUser()
