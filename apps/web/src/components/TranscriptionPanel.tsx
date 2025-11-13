@@ -112,30 +112,55 @@ export function TranscriptionPanel({ encounterId }: TranscriptionPanelProps) {
         setIsRecording(false)
       })
 
-      // Step 5: Send audio to Deepgram using MediaRecorder
-      // Deepgram accepts raw audio data, so we'll use MediaRecorder to capture chunks
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus',
+      // Step 5: Send audio to Deepgram
+      // Deepgram's live API expects raw PCM audio (Int16Array)
+      // We'll use Web Audio API to convert the stream to PCM format
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({
+        sampleRate: 16000,
       })
+      const source = audioContext.createMediaStreamSource(stream)
+      
+      // Use AudioWorkletNode if available, otherwise fall back to ScriptProcessorNode
+      let processor: ScriptProcessorNode | AudioWorkletNode
+      
+      if (audioContext.audioWorklet) {
+        // Modern approach: AudioWorklet (more efficient)
+        try {
+          // Note: In production, you'd load an AudioWorklet processor module
+          // For now, fall back to ScriptProcessorNode
+          processor = audioContext.createScriptProcessor(4096, 1, 1)
+        } catch (e) {
+          processor = audioContext.createScriptProcessor(4096, 1, 1)
+        }
+      } else {
+        // Fallback: ScriptProcessorNode (deprecated but widely supported)
+        processor = audioContext.createScriptProcessor(4096, 1, 1)
+      }
 
-      mediaRecorder.ondataavailable = async (event) => {
-        if (event.data.size > 0 && connection.getReadyState() === 1) {
-          // Convert Blob to ArrayBuffer for Deepgram
-          const arrayBuffer = await event.data.arrayBuffer()
-          connection.send(arrayBuffer)
+      if ('onaudioprocess' in processor) {
+        (processor as ScriptProcessorNode).onaudioprocess = (event) => {
+          if (connection.getReadyState() !== 1) return
+          
+          const inputData = event.inputBuffer.getChannelData(0)
+          // Convert Float32Array (-1 to 1) to Int16Array (-32768 to 32767)
+          const int16Data = new Int16Array(inputData.length)
+          for (let i = 0; i < inputData.length; i++) {
+            const s = Math.max(-1, Math.min(1, inputData[i]))
+            int16Data[i] = s < 0 ? s * 0x8000 : s * 0x7FFF
+          }
+          
+          // Send PCM audio data to Deepgram
+          connection.send(int16Data.buffer)
         }
       }
 
-      mediaRecorder.onerror = (error) => {
-        console.error('MediaRecorder error:', error)
-        setError('Recording error occurred')
-      }
+      source.connect(processor)
+      processor.connect(audioContext.destination)
 
-      // Start recording and send chunks every 250ms for low latency
-      mediaRecorder.start(250)
-
-      // Store mediaRecorder for cleanup
-      ;(connection as any)._mediaRecorder = mediaRecorder
+      // Store references for cleanup
+      ;(connection as any)._audioContext = audioContext
+      ;(connection as any)._processor = processor
+      ;(connection as any)._source = source
     } catch (err: any) {
       setError(err.message || 'Failed to start recording')
       console.error('Recording error:', err)
@@ -161,10 +186,19 @@ export function TranscriptionPanel({ encounterId }: TranscriptionPanelProps) {
       // Close Deepgram connection
       if (deepgramConnectionRef.current) {
         const connection = deepgramConnectionRef.current
-        const mediaRecorder = (connection as any)._mediaRecorder
+        const audioContext = (connection as any)._audioContext
+        const processor = (connection as any)._processor
+        const source = (connection as any)._source
         
-        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-          mediaRecorder.stop()
+        // Disconnect audio nodes
+        if (processor) {
+          processor.disconnect()
+        }
+        if (source) {
+          source.disconnect()
+        }
+        if (audioContext && audioContext.state !== 'closed') {
+          audioContext.close()
         }
         
         connection.finish()

@@ -113,7 +113,7 @@ scribemd-pro/
 - [x] Encounter management CRUD ✅ (List, Create, Edit, View, Sign working)
 - [x] Transcription component ✅ (UI ready, API endpoints created)
 - [x] SOAP note generation API ✅ (Claude integration ready)
-- [ ] Real-time transcription (Deepgram WebSocket - needs testing)
+- [x] Real-time transcription (Deepgram integration complete ✅ - needs DEEPGRAM_API_KEY env var)
 - [ ] Complete SOAP generation flow (needs testing)
 - [ ] Template system
 - [ ] Vital signs tracking
