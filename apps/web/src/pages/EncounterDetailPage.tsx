@@ -9,6 +9,7 @@ import { FileUploadPanel } from '../components/FileUploadPanel'
 import { ICD10Suggestions } from '../components/ICD10Suggestions'
 import { EMLevelCalculator } from '../components/EMLevelCalculator'
 import { ClinicalIntelligence } from '../components/ClinicalIntelligence'
+import { ExportPDFButton } from '../components/ExportPDFButton'
 import { Navigation } from '../components/Navigation'
 
 export default function EncounterDetailPage() {
