@@ -227,6 +227,17 @@ export default function AdminDashboardPage() {
             </div>
             <p className="text-sm text-gray-600">Manage EHR and third-party integrations</p>
           </button>
+
+          <button
+            onClick={() => navigate('/admin/audit-logs')}
+            className="bg-white rounded-lg shadow p-6 text-left hover:shadow-lg transition-shadow w-full"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <FileText className="w-6 h-6 text-red-600" />
+              <h3 className="text-lg font-semibold text-gray-900">Audit Logs</h3>
+            </div>
+            <p className="text-sm text-gray-600">HIPAA-compliant access and activity logs</p>
+          </button>
         </div>
 
         {/* Recent Activity */}

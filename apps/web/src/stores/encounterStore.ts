@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
 import { useEmailStore } from './emailStore'
+import { logAuditEvent, AuditActions, ResourceTypes } from '../lib/audit'
 
 export interface Encounter {
   id: string
@@ -86,6 +87,13 @@ export const useEncounterStore = create<EncounterStore>((set, get) => ({
 
       if (error) throw error
       set({ currentEncounter: data, loading: false })
+      
+      // Audit log
+      await logAuditEvent({
+        action: AuditActions.VIEW,
+        resource_type: ResourceTypes.ENCOUNTER,
+        resource_id: id,
+      })
     } catch (error: any) {
       set({ error: error.message, loading: false })
     }
@@ -124,6 +132,13 @@ export const useEncounterStore = create<EncounterStore>((set, get) => ({
         currentEncounter: data,
         loading: false,
       }))
+
+      // Audit log
+      await logAuditEvent({
+        action: AuditActions.CREATE,
+        resource_type: ResourceTypes.ENCOUNTER,
+        resource_id: data.id,
+      })
 
       return data
     } catch (error: any) {
@@ -204,6 +219,13 @@ export const useEncounterStore = create<EncounterStore>((set, get) => ({
           currentEncounter: state.currentEncounter?.id === id ? data : state.currentEncounter,
           loading: false,
         }))
+
+        // Audit log
+        await logAuditEvent({
+          action: AuditActions.SIGN,
+          resource_type: ResourceTypes.ENCOUNTER,
+          resource_id: id,
+        })
 
         // Send email notification (non-blocking)
         try {

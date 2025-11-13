@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
+import { logAuditEvent, AuditActions, ResourceTypes } from '../lib/audit'
 
 export interface Patient {
   id: string
@@ -63,9 +64,16 @@ export const usePatientStore = create<PatientStore>((set) => ({
         .select('*')
         .eq('id', id)
         .single()
-      
+
       if (error) throw error
       set({ currentPatient: data, loading: false })
+      
+      // Audit log
+      await logAuditEvent({
+        action: AuditActions.VIEW,
+        resource_type: ResourceTypes.PATIENT,
+        resource_id: id,
+      })
     } catch (error: any) {
       set({ error: error.message, loading: false })
     }
@@ -118,14 +126,21 @@ export const usePatientStore = create<PatientStore>((set) => ({
         .eq('id', id)
         .select()
         .single()
-      
+
       if (error) throw error
-      
+
       set((state) => ({
         patients: state.patients.map(p => p.id === id ? data : p),
         currentPatient: state.currentPatient?.id === id ? data : state.currentPatient,
         loading: false,
       }))
+
+      // Audit log
+      await logAuditEvent({
+        action: AuditActions.UPDATE,
+        resource_type: ResourceTypes.PATIENT,
+        resource_id: id,
+      })
     } catch (error: any) {
       set({ error: error.message, loading: false })
       throw error
@@ -139,14 +154,21 @@ export const usePatientStore = create<PatientStore>((set) => ({
         .from('patients')
         .delete()
         .eq('id', id)
-      
+
       if (error) throw error
-      
+
       set((state) => ({
         patients: state.patients.filter(p => p.id !== id),
         currentPatient: state.currentPatient?.id === id ? null : state.currentPatient,
         loading: false,
       }))
+
+      // Audit log
+      await logAuditEvent({
+        action: AuditActions.DELETE,
+        resource_type: ResourceTypes.PATIENT,
+        resource_id: id,
+      })
     } catch (error: any) {
       set({ error: error.message, loading: false })
       throw error

@@ -18,6 +18,7 @@ import AdminAnalyticsPage from './pages/AdminAnalyticsPage'
 import AdminBillingPage from './pages/AdminBillingPage'
 import AdminPracticesPage from './pages/AdminPracticesPage'
 import AdminIntegrationsPage from './pages/AdminIntegrationsPage'
+import AdminAuditLogsPage from './pages/AdminAuditLogsPage'
 
 function App() {
   const { user, loading } = useAuthStore()
@@ -84,6 +85,7 @@ function App() {
       <Route path="/admin/billing" element={user?.role === 'admin' ? <AdminBillingPage /> : <Navigate to="/" />} />
       <Route path="/admin/practices" element={user?.role === 'admin' ? <AdminPracticesPage /> : <Navigate to="/" />} />
       <Route path="/admin/integrations" element={user?.role === 'admin' ? <AdminIntegrationsPage /> : <Navigate to="/" />} />
+      <Route path="/admin/audit-logs" element={user?.role === 'admin' ? <AdminAuditLogsPage /> : <Navigate to="/" />} />
     </Routes>
   )
 }

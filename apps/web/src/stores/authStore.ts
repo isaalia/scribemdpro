@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
+import { logAuditEvent, AuditActions } from '../lib/audit'
 
 interface User {
   id: string
@@ -94,9 +95,27 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
     
     set({ user: userData })
+    
+    // Audit log
+    await logAuditEvent({
+      action: AuditActions.LOGIN,
+      resource_type: 'auth',
+      metadata: { email: userData.email },
+    })
   },
 
   logout: async () => {
+    const currentUser = get().user
+    
+    // Audit log before logout
+    if (currentUser) {
+      await logAuditEvent({
+        action: AuditActions.LOGOUT,
+        resource_type: 'auth',
+        metadata: { email: currentUser.email },
+      })
+    }
+    
     await supabase.auth.signOut()
     set({ user: null })
   },
