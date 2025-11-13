@@ -12,6 +12,8 @@ import TemplatesPage from './pages/TemplatesPage'
 import TemplateFormPage from './pages/TemplateFormPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
 import AdminUsersPage from './pages/AdminUsersPage'
+import AdminSubscriptionsPage from './pages/AdminSubscriptionsPage'
+import AdminSubscriptionFormPage from './pages/AdminSubscriptionFormPage'
 
 function App() {
   const { user, loading } = useAuthStore()
@@ -71,6 +73,9 @@ function App() {
       {/* Admin Routes */}
       <Route path="/admin" element={user?.role === 'admin' ? <AdminDashboardPage /> : <Navigate to="/" />} />
       <Route path="/admin/users" element={user?.role === 'admin' ? <AdminUsersPage /> : <Navigate to="/" />} />
+      <Route path="/admin/subscriptions" element={user?.role === 'admin' ? <AdminSubscriptionsPage /> : <Navigate to="/" />} />
+      <Route path="/admin/subscriptions/new" element={user?.role === 'admin' ? <AdminSubscriptionFormPage /> : <Navigate to="/" />} />
+      <Route path="/admin/subscriptions/:practiceId" element={user?.role === 'admin' ? <AdminSubscriptionFormPage /> : <Navigate to="/" />} />
     </Routes>
   )
 }

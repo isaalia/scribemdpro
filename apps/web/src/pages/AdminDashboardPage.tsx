@@ -186,7 +186,7 @@ export default function AdminDashboardPage() {
 
           <button
             onClick={() => navigate('/admin/subscriptions')}
-            className="bg-white rounded-lg shadow p-6 text-left hover:shadow-lg transition-shadow"
+            className="bg-white rounded-lg shadow p-6 text-left hover:shadow-lg transition-shadow w-full"
           >
             <div className="flex items-center gap-3 mb-2">
               <DollarSign className="w-6 h-6 text-yellow-600" />

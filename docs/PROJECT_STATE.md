@@ -128,8 +128,8 @@ scribemd-pro/
 - [x] Smart vitals interpretation ✅ (Automatic abnormality detection in ClinicalIntelligence)
 
 ### PHASE 4: Admin & Business (Week 3)
-- [ ] Admin dashboard
-- [ ] User management
+- [x] Admin dashboard ✅ (System stats, recent activity, quick actions)
+- [x] User management ✅ (Create users, activate/deactivate, search, role management)
 - [ ] Subscription management (Stripe)
 - [ ] Analytics dashboard
 - [ ] Billing & invoicing
