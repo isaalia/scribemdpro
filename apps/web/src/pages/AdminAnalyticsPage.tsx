@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { supabase } from '../lib/supabase'
-import { TrendingUp, Users, FileText, DollarSign, Activity, Calendar } from 'lucide-react'
+import { Users, FileText, DollarSign, Activity } from 'lucide-react'
 import { Navigation } from '../components/Navigation'
 
 interface AnalyticsData {
