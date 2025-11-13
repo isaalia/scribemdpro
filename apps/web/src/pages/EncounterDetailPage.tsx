@@ -4,6 +4,7 @@ import { useEncounterStore } from '../stores/encounterStore'
 import { usePatientStore } from '../stores/patientStore'
 import { ArrowLeft, Save, Mic, FileText, CheckCircle } from 'lucide-react'
 import { TranscriptionPanel } from '../components/TranscriptionPanel'
+import { VitalSignsPanel } from '../components/VitalSignsPanel'
 import { Navigation } from '../components/Navigation'
 
 export default function EncounterDetailPage() {
@@ -156,6 +157,17 @@ export default function EncounterDetailPage() {
             <p className="text-gray-700">{currentEncounter.chief_complaint}</p>
           </div>
         )}
+
+        {/* Vital Signs */}
+        <VitalSignsPanel
+          encounterId={currentEncounter.id}
+          initialVitals={currentEncounter.vitals}
+          onSave={() => {
+            if (id) {
+              fetchEncounter(id)
+            }
+          }}
+        />
 
         {/* Transcription Section */}
         {currentEncounter.status === 'in_progress' ? (
