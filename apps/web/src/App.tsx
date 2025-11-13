@@ -19,6 +19,8 @@ import AdminBillingPage from './pages/AdminBillingPage'
 import AdminPracticesPage from './pages/AdminPracticesPage'
 import AdminIntegrationsPage from './pages/AdminIntegrationsPage'
 import AdminAuditLogsPage from './pages/AdminAuditLogsPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 
 function App() {
   const { user, loading } = useAuthStore()
