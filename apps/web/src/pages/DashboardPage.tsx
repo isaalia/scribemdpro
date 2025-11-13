@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom'
 import { Users, FileText, Calendar } from 'lucide-react'
 import { Navigation } from '../components/Navigation'
+import { useAuthStore } from '../stores/authStore'
 
 export default function DashboardPage() {
   const navigate = useNavigate()
+  const { user } = useAuthStore()
 
   return (
     <div className="min-h-screen bg-gray-50">
