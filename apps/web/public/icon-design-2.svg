@@ -1,0 +1,49 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Black Background -->
+  <rect width="1024" height="1024" rx="205" fill="#000000"/>
+  
+  <!-- White Medical Cross with blue outline (center-left) -->
+  <g transform="translate(350, 400)">
+    <!-- Vertical bar -->
+    <rect x="-50" y="-120" width="100" height="240" rx="20" fill="#ffffff" stroke="#0066cc" stroke-width="4"/>
+    <!-- Horizontal bar -->
+    <rect x="-120" y="-50" width="240" height="100" rx="20" fill="#ffffff" stroke="#0066cc" stroke-width="4"/>
+  </g>
+  
+  <!-- Speech Bubble with blue outline -->
+  <g transform="translate(500, 420)">
+    <!-- Bubble body -->
+    <path d="M 0 0 L 200 0 Q 220 0 220 20 L 220 100 Q 220 120 200 120 L 50 120 L 30 140 L 30 120 Q 0 120 0 100 L 0 20 Q 0 0 20 0 Z" 
+          fill="#ffffff" stroke="#0066cc" stroke-width="4"/>
+    
+    <!-- Doctor silhouette inside bubble -->
+    <g transform="translate(110, 60)">
+      <!-- Head -->
+      <circle cx="0" cy="-25" r="30" fill="#0066cc"/>
+      <!-- Shoulders -->
+      <path d="M -50 0 Q -50 25 -25 25 L 25 25 Q 50 25 50 0" fill="#0066cc"/>
+      <!-- Stethoscope -->
+      <circle cx="-20" cy="-20" r="10" fill="#ffffff" stroke="#0066cc" stroke-width="2"/>
+      <path d="M -20 -20 Q -20 5 -10 20" stroke="#ffffff" stroke-width="4" fill="none"/>
+      <!-- Headset with microphone -->
+      <path d="M -25 -30 Q -35 -30 -35 -20" stroke="#0066cc" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M -35 -20 Q -40 -15 -40 -10" stroke="#0066cc" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </g>
+  </g>
+  
+  <!-- Red Microphone (below speech bubble, slightly right) -->
+  <g transform="translate(650, 550)">
+    <!-- Microphone body with gradient effect -->
+    <defs>
+      <linearGradient id="micGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6666;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#cc0000;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    <ellipse cx="0" cy="-20" rx="30" ry="40" fill="url(#micGradient)"/>
+    <rect x="-6" y="18" width="12" height="35" rx="6" fill="#990000"/>
+    <!-- Microphone stand -->
+    <rect x="-18" y="48" width="36" height="10" rx="5" fill="#660000"/>
+  </g>
+</svg>
+

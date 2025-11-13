@@ -1,0 +1,54 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0066cc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#004499;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background with rounded corners -->
+  <rect width="1024" height="1024" rx="205" fill="url(#bgGradient)"/>
+  
+  <!-- White Medical Cross (slightly left of center) -->
+  <g transform="translate(400, 300)">
+    <!-- Vertical bar -->
+    <rect x="-50" y="-120" width="100" height="240" rx="20" fill="#ffffff"/>
+    <!-- Horizontal bar -->
+    <rect x="-120" y="-50" width="240" height="100" rx="20" fill="#ffffff"/>
+  </g>
+  
+  <!-- Speech Bubble -->
+  <g transform="translate(550, 320)">
+    <!-- Bubble body -->
+    <path d="M 0 0 L 180 0 Q 200 0 200 20 L 200 80 Q 200 100 180 100 L 40 100 L 20 120 L 20 100 Q 0 100 0 80 L 0 20 Q 0 0 20 0 Z" 
+          fill="#ffffff" stroke="#003366" stroke-width="3"/>
+    
+    <!-- Doctor silhouette inside bubble -->
+    <g transform="translate(100, 50)">
+      <!-- Head -->
+      <circle cx="0" cy="-20" r="25" fill="#003366"/>
+      <!-- Shoulders -->
+      <path d="M -40 0 Q -40 20 -20 20 L 20 20 Q 40 20 40 0" fill="#003366"/>
+      <!-- Stethoscope -->
+      <circle cx="-15" cy="-15" r="8" fill="#ffffff" stroke="#003366" stroke-width="2"/>
+      <path d="M -15 -15 Q -15 5 -5 15" stroke="#ffffff" stroke-width="3" fill="none"/>
+      <!-- Headset with microphone -->
+      <path d="M -20 -25 Q -30 -25 -30 -15" stroke="#003366" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M -30 -15 Q -35 -10 -35 -5" stroke="#003366" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </g>
+  </g>
+  
+  <!-- Red Microphone (bottom right of speech bubble) -->
+  <g transform="translate(680, 420)">
+    <!-- Microphone body -->
+    <ellipse cx="0" cy="-15" rx="25" ry="35" fill="#ff3333"/>
+    <rect x="-5" y="15" width="10" height="30" rx="5" fill="#cc0000"/>
+    <!-- Microphone stand -->
+    <rect x="-15" y="40" width="30" height="8" rx="4" fill="#990000"/>
+  </g>
+  
+  <!-- Text: ScribeMD Pro -->
+  <text x="512" y="780" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#ffffff" text-anchor="middle">ScribeMD</text>
+  <text x="512" y="840" font-family="Arial, sans-serif" font-size="48" fill="#ffffff" text-anchor="middle">Pro</text>
+</svg>
+

@@ -1,0 +1,55 @@
+<svg width="2048" height="2732" viewBox="0 0 2048 2732" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="splashBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0066cc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#004499;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="2048" height="2732" fill="url(#splashBg)"/>
+  
+  <!-- Centered Logo Group -->
+  <g transform="translate(1024, 1200)">
+    <!-- White Medical Cross -->
+    <g transform="translate(-100, -200)">
+      <!-- Vertical bar -->
+      <rect x="-100" y="-240" width="200" height="480" rx="40" fill="#ffffff"/>
+      <!-- Horizontal bar -->
+      <rect x="-240" y="-100" width="480" height="200" rx="40" fill="#ffffff"/>
+    </g>
+    
+    <!-- Speech Bubble -->
+    <g transform="translate(100, -180)">
+      <!-- Bubble body -->
+      <path d="M 0 0 L 360 0 Q 400 0 400 40 L 400 160 Q 400 200 360 200 L 80 200 L 40 240 L 40 200 Q 0 200 0 160 L 0 40 Q 0 0 40 0 Z" 
+            fill="#ffffff" stroke="#003366" stroke-width="6"/>
+      
+      <!-- Doctor silhouette inside bubble -->
+      <g transform="translate(200, 100)">
+        <!-- Head -->
+        <circle cx="0" cy="-40" r="50" fill="#003366"/>
+        <!-- Shoulders -->
+        <path d="M -80 0 Q -80 40 -40 40 L 40 40 Q 80 40 80 0" fill="#003366"/>
+        <!-- Stethoscope -->
+        <circle cx="-30" cy="-30" r="16" fill="#ffffff" stroke="#003366" stroke-width="4"/>
+        <path d="M -30 -30 Q -30 10 -10 30" stroke="#ffffff" stroke-width="6" fill="none"/>
+        <!-- Headset with microphone -->
+        <path d="M -40 -50 Q -60 -50 -60 -30" stroke="#003366" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M -60 -30 Q -70 -20 -70 -10" stroke="#003366" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </g>
+    </g>
+    
+    <!-- Red Microphone -->
+    <g transform="translate(360, 40)">
+      <ellipse cx="0" cy="-30" rx="50" ry="70" fill="#ff3333"/>
+      <rect x="-10" y="30" width="20" height="60" rx="10" fill="#cc0000"/>
+      <rect x="-30" y="80" width="60" height="16" rx="8" fill="#990000"/>
+    </g>
+    
+    <!-- App Name -->
+    <text x="0" y="400" font-family="Arial, sans-serif" font-size="140" font-weight="bold" fill="#ffffff" text-anchor="middle">ScribeMD Pro</text>
+    <text x="0" y="500" font-family="Arial, sans-serif" font-size="70" fill="#ffffff" text-anchor="middle" opacity="0.9">AI-Powered Medical Documentation</text>
+  </g>
+</svg>
+
