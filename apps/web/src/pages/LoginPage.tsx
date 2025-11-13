@@ -83,17 +83,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <button
-              onClick={() => navigate('/signup')}
-              className="text-primary-600 hover:text-primary-700 font-medium"
-            >
-              Create Account
-            </button>
-          </p>
-        </div>
+        {/* Signup disabled - admin creates accounts */}
       </div>
     </div>
   )

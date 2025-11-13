@@ -50,7 +50,7 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
-      <Route path="/signup" element={user ? <Navigate to="/" /> : <SignupPage />} />
+      {/* Signup route disabled - admin creates accounts */}
       <Route path="/" element={user ? <DashboardPage /> : <Navigate to="/login" />} />
       <Route path="/patients" element={user ? <PatientsPage /> : <Navigate to="/login" />} />
       <Route path="/patients/new" element={user ? <PatientFormPage /> : <Navigate to="/login" />} />
