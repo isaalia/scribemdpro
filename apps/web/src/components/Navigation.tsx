@@ -61,6 +61,17 @@ export function Navigation() {
                 <FileText className="w-4 h-4" />
                 Encounters
               </button>
+              <button
+                onClick={() => navigate('/templates')}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive('/templates') || location.pathname.startsWith('/templates/')
+                    ? 'bg-primary-100 text-primary-700'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                Templates
+              </button>
             </div>
           </div>
           <div className="flex items-center gap-4">
