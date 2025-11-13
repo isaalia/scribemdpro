@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { Mic, MicOff, Loader2 } from 'lucide-react'
+import { Mic, MicOff } from 'lucide-react'
 import { useEncounterStore } from '../stores/encounterStore'
+import { createClient } from '@deepgram/sdk'
 
 interface TranscriptionPanelProps {
   encounterId: string
@@ -10,8 +11,9 @@ export function TranscriptionPanel({ encounterId }: TranscriptionPanelProps) {
   const [isRecording, setIsRecording] = useState(false)
   const [error, setError] = useState('')
   const [transcript, setTranscript] = useState('')
-  const websocketRef = useRef<WebSocket | null>(null)
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const [isConnecting, setIsConnecting] = useState(false)
+  const deepgramConnectionRef = useRef<any>(null)
+  const mediaStreamRef = useRef<MediaStream | null>(null)
   const { updateEncounter, currentEncounter } = useEncounterStore()
 
   useEffect(() => {
@@ -20,62 +22,168 @@ export function TranscriptionPanel({ encounterId }: TranscriptionPanelProps) {
     }
   }, [currentEncounter])
 
+  useEffect(() => {
+    // Cleanup on unmount
+    return () => {
+      if (deepgramConnectionRef.current) {
+        deepgramConnectionRef.current.finish()
+      }
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => track.stop())
+      }
+    }
+  }, [])
+
   const startRecording = async () => {
     try {
       setError('')
-      // Request microphone permission
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      
-      // For now, we'll use a placeholder WebSocket URL
-      // This will be replaced with actual Deepgram integration
-      const wsUrl = import.meta.env.VITE_WS_URL || 'wss://api.deepgram.com/v1/listen'
-      
-      // TODO: Connect to actual transcription WebSocket
-      // For now, we'll simulate with local recording
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus'
+      setIsConnecting(true)
+
+      // Step 1: Get Deepgram token from our API
+      const tokenResponse = await fetch('/api/transcribe/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
       })
-      mediaRecorderRef.current = mediaRecorder
 
-      const audioChunks: Blob[] = []
+      if (!tokenResponse.ok) {
+        throw new Error('Failed to get transcription token')
+      }
 
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.push(event.data)
+      const { token } = await tokenResponse.json()
+      if (!token) {
+        throw new Error('No token received from server')
+      }
+
+      // Step 2: Request microphone permission
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          channelCount: 1,
+          sampleRate: 16000,
+          echoCancellation: true,
+          noiseSuppression: true,
+        }
+      })
+      mediaStreamRef.current = stream
+
+      // Step 3: Create Deepgram connection
+      const deepgram = createClient(token)
+      const connection = deepgram.listen.live({
+        model: 'nova-2',
+        language: 'en-US',
+        smart_format: true,
+        punctuate: true,
+        interim_results: true,
+        endpointing: 300,
+      })
+
+      deepgramConnectionRef.current = connection
+
+      // Step 4: Handle transcription results
+      connection.on('open', () => {
+        console.log('Deepgram connection opened')
+        setIsConnecting(false)
+        setIsRecording(true)
+      })
+
+      connection.on('Results', (data: any) => {
+        const transcriptText = data.channel?.alternatives?.[0]?.transcript
+        if (transcriptText) {
+          if (data.is_final) {
+            // Final result - append to transcript
+            setTranscript(prev => {
+              const updated = prev ? `${prev} ${transcriptText}` : transcriptText
+              return updated.trim()
+            })
+          } else {
+            // Interim result - show temporarily (optional: can display separately)
+            // For now, we'll just append interim results too
+          }
+        }
+      })
+
+      connection.on('error', (error: any) => {
+        console.error('Deepgram error:', error)
+        setError(`Transcription error: ${error.message || 'Unknown error'}`)
+        stopRecording()
+      })
+
+      connection.on('close', () => {
+        console.log('Deepgram connection closed')
+        setIsRecording(false)
+      })
+
+      // Step 5: Send audio to Deepgram using MediaRecorder
+      // Deepgram accepts raw audio data, so we'll use MediaRecorder to capture chunks
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'audio/webm;codecs=opus',
+      })
+
+      mediaRecorder.ondataavailable = async (event) => {
+        if (event.data.size > 0 && connection.getReadyState() === 1) {
+          // Convert Blob to ArrayBuffer for Deepgram
+          const arrayBuffer = await event.data.arrayBuffer()
+          connection.send(arrayBuffer)
         }
       }
 
-      mediaRecorder.onstop = async () => {
-        // TODO: Send audio to transcription API
-        // For now, we'll just update the transcript placeholder
-        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' })
-        console.log('Audio recorded:', audioBlob.size, 'bytes')
-        
-        // Update encounter with transcript
-        if (transcript) {
-          await updateEncounter(encounterId, {
-            raw_transcript: transcript,
-          })
-        }
+      mediaRecorder.onerror = (error) => {
+        console.error('MediaRecorder error:', error)
+        setError('Recording error occurred')
       }
 
-      mediaRecorder.start(1000) // Collect chunks every second
-      setIsRecording(true)
+      // Start recording and send chunks every 250ms for low latency
+      mediaRecorder.start(250)
+
+      // Store mediaRecorder for cleanup
+      ;(connection as any)._mediaRecorder = mediaRecorder
     } catch (err: any) {
       setError(err.message || 'Failed to start recording')
       console.error('Recording error:', err)
+      setIsConnecting(false)
+      setIsRecording(false)
+      
+      // Cleanup on error
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => track.stop())
+        mediaStreamRef.current = null
+      }
     }
   }
 
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop()
-      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop())
+  const stopRecording = async () => {
+    try {
+      // Stop media stream
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => track.stop())
+        mediaStreamRef.current = null
+      }
+
+      // Close Deepgram connection
+      if (deepgramConnectionRef.current) {
+        const connection = deepgramConnectionRef.current
+        const mediaRecorder = (connection as any)._mediaRecorder
+        
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+          mediaRecorder.stop()
+        }
+        
+        connection.finish()
+        deepgramConnectionRef.current = null
+      }
+
+      setIsRecording(false)
+      setIsConnecting(false)
+
+      // Auto-save transcript when stopping
+      if (transcript && encounterId) {
+        await updateEncounter(encounterId, {
+          raw_transcript: transcript,
+        })
+      }
+    } catch (err: any) {
+      console.error('Stop recording error:', err)
+      setError(err.message || 'Error stopping recording')
     }
-    if (websocketRef.current) {
-      websocketRef.current.close()
-    }
-    setIsRecording(false)
   }
 
   const handleSaveTranscript = async () => {
@@ -106,11 +214,12 @@ export function TranscriptionPanel({ encounterId }: TranscriptionPanelProps) {
           )}
           <button
             onClick={isRecording ? stopRecording : startRecording}
+            disabled={isConnecting}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               isRecording
                 ? 'bg-red-500 text-white hover:bg-red-600'
                 : 'bg-primary-500 text-white hover:bg-primary-600'
-            }`}
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {isRecording ? (
               <>
@@ -120,17 +229,19 @@ export function TranscriptionPanel({ encounterId }: TranscriptionPanelProps) {
             ) : (
               <>
                 <Mic className="w-5 h-5" />
-                Start Recording
+                {isConnecting ? 'Connecting...' : 'Start Recording'}
               </>
             )}
           </button>
         </div>
       </div>
 
-      {isRecording && (
+      {(isRecording || isConnecting) && (
         <div className="flex items-center gap-2 text-red-600 mb-4">
           <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse" />
-          <span className="text-sm font-medium">Recording...</span>
+          <span className="text-sm font-medium">
+            {isConnecting ? 'Connecting...' : 'Recording...'}
+          </span>
         </div>
       )}
 
@@ -151,7 +262,7 @@ export function TranscriptionPanel({ encounterId }: TranscriptionPanelProps) {
           className="w-full min-h-[200px] max-h-[400px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-y"
         />
         <p className="text-xs text-gray-500 mt-2">
-          Note: Real-time transcription via Deepgram will be available after API setup
+          Real-time transcription powered by Deepgram. Click "Start Recording" to begin.
         </p>
       </div>
     </div>

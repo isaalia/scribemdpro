@@ -23,8 +23,10 @@
     "vite": "^7.2.2"
   },
   "dependencies": {
+    "@deepgram/sdk": "^4.11.2",
     "@supabase/supabase-js": "^2.81.1",
     "@tanstack/react-query": "^5.90.7",
+    "@vercel/node": "^5.5.5",
     "lucide-react": "^0.553.0",
     "react-router-dom": "^7.9.5",
     "zustand": "^5.0.8"
