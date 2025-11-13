@@ -1,6 +1,4 @@
--- ============================================
 -- FIX PATIENT RLS POLICIES - Add INSERT, UPDATE, DELETE
--- ============================================
 -- Run this in Supabase SQL Editor
 
 -- Drop existing policies if they exist
@@ -51,9 +49,7 @@ CREATE POLICY "Users can delete patients in their practice"
     )
   );
 
--- ============================================
 -- FIX ENCOUNTER RLS POLICIES - Add INSERT, UPDATE, DELETE
--- ============================================
 
 -- Drop existing policies if they exist
 DROP POLICY IF EXISTS "Users can insert encounters in their practice" ON encounters;
@@ -103,9 +99,7 @@ CREATE POLICY "Users can delete encounters in their practice"
     )
   );
 
--- ============================================
 -- VERIFY POLICIES
--- ============================================
 SELECT 
   tablename,
   policyname,
