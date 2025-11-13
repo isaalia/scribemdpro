@@ -143,10 +143,12 @@ scribemd-pro/
 - [x] Lab result imports ✅ (Lab file import, JSON/CSV parsing, file storage)
 
 ### PHASE 6: Mobile Apps (Week 4)
-- [ ] Capacitor setup
-- [ ] iOS build configuration
-- [ ] Android build configuration
-- [ ] App Store assets
+- [x] Capacitor setup ✅ (Capacitor installed, configured, platforms added)
+- [x] iOS build configuration ✅ (Xcode project created, permissions configured)
+- [x] Android build configuration ✅ (Android Studio project created, permissions configured)
+- [x] Mobile setup guide ✅ (Complete deployment instructions)
+- [ ] App icons and splash screens (generate assets)
+- [ ] App Store assets (screenshots, descriptions)
 - [ ] TestFlight deployment
 - [ ] Google Play deployment
 
