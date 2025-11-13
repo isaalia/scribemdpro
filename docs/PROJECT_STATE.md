@@ -130,7 +130,7 @@ scribemd-pro/
 ### PHASE 4: Admin & Business (Week 3)
 - [x] Admin dashboard ✅ (System stats, recent activity, quick actions)
 - [x] User management ✅ (Create users, activate/deactivate, search, role management)
-- [ ] Subscription management (Stripe)
+- [x] Subscription management (Stripe) ✅ (Checkout sessions, webhooks, subscription pages, plan management)
 - [ ] Analytics dashboard
 - [ ] Billing & invoicing
 - [ ] Team/practice management

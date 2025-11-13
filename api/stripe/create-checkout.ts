@@ -5,8 +5,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-12-18.acacia',
 })
 
-// Subscription plans
-export const PLANS = {
+// Subscription plans - must match frontend plans.ts
+const PLANS = {
   starter: {
     name: 'Starter',
     price: 99,

@@ -4,7 +4,7 @@ import { useAuthStore } from '../stores/authStore'
 import { supabase } from '../lib/supabase'
 import { CreditCard, CheckCircle, XCircle, Loader2, ArrowRight } from 'lucide-react'
 import { Navigation } from '../components/Navigation'
-import { PLANS } from '../../../../api/stripe/create-checkout'
+import { PLANS } from '../lib/plans'
 
 interface Practice {
   id: string

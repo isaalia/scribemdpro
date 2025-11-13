@@ -4,7 +4,7 @@ import { useAuthStore } from '../stores/authStore'
 import { supabase } from '../lib/supabase'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { Navigation } from '../components/Navigation'
-import { PLANS } from '../../../../api/stripe/create-checkout'
+import { PLANS } from '../lib/plans'
 
 export default function AdminSubscriptionFormPage() {
   const navigate = useNavigate()
