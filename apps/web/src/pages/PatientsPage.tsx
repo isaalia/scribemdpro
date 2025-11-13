@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePatientStore } from '../stores/patientStore'
 import { Plus, Search, Edit, Trash2, User, FileText } from 'lucide-react'
+import { Navigation } from '../components/Navigation'
 
 export default function PatientsPage() {
   const navigate = useNavigate()
@@ -52,6 +53,7 @@ export default function PatientsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navigation />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">

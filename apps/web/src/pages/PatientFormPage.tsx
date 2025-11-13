@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { usePatientStore } from '../stores/patientStore'
 import type { Patient } from '../stores/patientStore'
 import { ArrowLeft, Save } from 'lucide-react'
+import { Navigation } from '../components/Navigation'
 
 export default function PatientFormPage() {
   const navigate = useNavigate()
@@ -71,6 +72,7 @@ export default function PatientFormPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navigation />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">

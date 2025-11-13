@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEncounterStore } from '../stores/encounterStore'
 import { usePatientStore } from '../stores/patientStore'
 import { Plus, FileText, Clock, CheckCircle, Edit, Trash2 } from 'lucide-react'
+import { Navigation } from '../components/Navigation'
 
 export default function EncountersPage() {
   const navigate = useNavigate()
@@ -47,6 +48,7 @@ export default function EncountersPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navigation />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">

@@ -3,6 +3,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useEncounterStore } from '../stores/encounterStore'
 import { usePatientStore } from '../stores/patientStore'
 import { ArrowLeft, Save, Mic } from 'lucide-react'
+import { Navigation } from '../components/Navigation'
 
 export default function EncounterFormPage() {
   const navigate = useNavigate()
@@ -74,15 +75,16 @@ export default function EncounterFormPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navigation />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/encounters')}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
-            Back
+            Back to Encounters
           </button>
           <h1 className="text-3xl font-bold text-gray-900">
             {isEdit ? 'Edit Encounter' : 'New Encounter'}
