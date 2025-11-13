@@ -10,6 +10,8 @@ import EncounterFormPage from './pages/EncounterFormPage'
 import EncounterDetailPage from './pages/EncounterDetailPage'
 import TemplatesPage from './pages/TemplatesPage'
 import TemplateFormPage from './pages/TemplateFormPage'
+import AdminDashboardPage from './pages/AdminDashboardPage'
+import AdminUsersPage from './pages/AdminUsersPage'
 
 function App() {
   const { user, loading } = useAuthStore()
@@ -65,6 +67,10 @@ function App() {
       <Route path="/templates" element={user ? <TemplatesPage /> : <Navigate to="/login" />} />
       <Route path="/templates/new" element={user ? <TemplateFormPage /> : <Navigate to="/login" />} />
       <Route path="/templates/:id/edit" element={user ? <TemplateFormPage /> : <Navigate to="/login" />} />
+      
+      {/* Admin Routes */}
+      <Route path="/admin" element={user?.role === 'admin' ? <AdminDashboardPage /> : <Navigate to="/" />} />
+      <Route path="/admin/users" element={user?.role === 'admin' ? <AdminUsersPage /> : <Navigate to="/" />} />
     </Routes>
   )
 }

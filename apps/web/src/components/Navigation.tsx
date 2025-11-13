@@ -72,6 +72,19 @@ export function Navigation() {
                 <FileText className="w-4 h-4" />
                 Templates
               </button>
+              {user?.role === 'admin' && (
+                <button
+                  onClick={() => navigate('/admin')}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    location.pathname.startsWith('/admin')
+                      ? 'bg-primary-100 text-primary-700'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <Users className="w-4 h-4" />
+                  Admin
+                </button>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-4">
