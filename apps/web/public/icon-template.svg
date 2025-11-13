@@ -1,0 +1,16 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="102" fill="#0066cc"/>
+  
+  <!-- Medical Cross Icon -->
+  <g transform="translate(256, 256)">
+    <!-- Vertical bar -->
+    <rect x="-30" y="-80" width="60" height="160" rx="8" fill="#ffffff"/>
+    <!-- Horizontal bar -->
+    <rect x="-80" y="-30" width="160" height="60" rx="8" fill="#ffffff"/>
+  </g>
+  
+  <!-- Text "ScribeMD" -->
+  <text x="256" y="380" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#ffffff" text-anchor="middle">ScribeMD</text>
+</svg>
+
