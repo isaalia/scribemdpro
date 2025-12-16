@@ -1,0 +1,1000 @@
+URSOR AUTOPILOT PROTOCOL (Paste into .cursor/rules.md)
+This is a persistent instruction set for Cursor to follow during all new builds.
+🚀 1. ALWAYS enforce repo stability before starting any new work
+
+Before writing or modifying code, Cursor must automatically:
+
+Run a repo audit:
+
+Check package.json for missing scripts
+
+Check missing imports
+
+Check for TS/ESLint/Next.js build errors
+
+Check Prisma schema for validity
+
+Validate environment variables
+
+Validate git remote connectivity (GitHub, Vercel, Railway)
+
+Repair everything automatically:
+
+Reinstall or fix dependencies
+
+Fix broken imports
+
+Remove duplicate or stale files
+
+Rewrite corrupted configs
+
+Fix Prisma schema & migrations
+
+Fix Next.js errors
+
+Ensure npm run dev always works, without asking the user.
+
+🔌 2. ALWAYS run backend health check BEFORE starting dev
+
+For every session, Cursor must:
+
+Backend health check includes:
+
+Database connection test (Postgres, Prisma)
+
+Running migrations if missing
+
+Verifying server builds clean
+
+Ensuring no zombie processes hold ports
+
+Ensuring that .env is sufficient and not corrupted
+
+If anything is broken, Cursor must repair it immediately before continuing.
+
+💻 3. ALWAYS run frontend health check BEFORE opening Next.js
+
+Check:
+
+Next.js compiles with zero errors
+
+All shadcn/ui components build
+
+Tailwind config is valid
+
+App Router pages load
+
+Fonts, assets, logo paths exist
+
+If broken → Cursor must automatically fix.
+
+🔧 4. ALWAYS ensure Next.js starts cleanly on a free port
+
+Cursor must implement & maintain:
+
+Automatic port detection logic
+
+Default port = 3000
+
+If 3000 is in use → 3001 → 3002 automatically
+
+No manual steps, no errors
+
+Automatic port cleanup
+
+Cursor must always run the equivalent of:
+
+Mac/Linux → lsof -ti :PORT | xargs kill -9
+
+Windows → netstat -ano + targeted kill
+
+Cursor must ONLY kill the dev server process — not all Node processes.
+
+🧼 5. ALWAYS ensure npm run dev triggers a clean, reliable startup
+
+Cursor must set up a script that:
+
+Cleans ports
+
+Validates backend
+
+Validates frontend
+
+Runs migrations
+
+Starts dev server on free port
+
+Opens browser automatically once ready
+
+Cursor must maintain this script in package.json:
+
+"clean-port": "node scripts/clean-port.js",
+"predev": "npm run clean-port && prisma migrate deploy",
+"dev": "next dev -p 3000"
+
+🚀 6. ALWAYS auto-commit & auto-push to GitHub
+
+After every major change, Cursor must:
+
+stage
+
+commit
+
+push
+
+With commit message that describes the changes it made.
+
+You (the user) should never have to touch git manually.
+
+🚀 7. ALWAYS auto-deploy to Vercel & Railway (when connected)
+
+If Vercel or Railway is configured:
+
+Cursor must run the deploy commands automatically
+
+Ensure build passes
+
+Fix deployment errors without asking the user
+
+Cursor should treat deployments like CI/CD pipelines:
+
+If an error appears → fix → retry → confirm success.
+
+📦 8. ALWAYS maintain a healthy dev environment
+
+Cursor must:
+
+Keep dependencies updated
+
+Remove unused packages
+
+Maintain Tailwind config hygiene
+
+Maintain consistent shadcn/ui usage
+
+Remove dead code and unused components
+
+Ensure consistent formatting (Prettier + ESLint)
+
+🧪 9. ALWAYS maintain minimal tests for critical flows
+
+Cursor must keep working tests for:
+
+Auth
+
+DB connection
+
+Main routing
+
+Booking logic or equivalent
+
+If a test breaks → Cursor must fix.
+
+🔁 10. NEVER ask the user to run commands manually
+
+Cursor must:
+
+Run migrations automatically
+
+Install dependencies automatically
+
+Set up scripts automatically
+
+Fix errors automatically
+
+The user’s only job is “npm run dev” — nothing else.
+
+🧠 11. ALWAYS explain what changes were made at the end of a task
+
+Cursor must give a summary:
+
+What was fixed
+
+What was added
+
+What changed in the repo
+
+What deploys were triggered
+
+No questions unless absolutely necessary.
+
+🛑 12. NEVER break the repo
+
+If new code introduces errors, Cursor must:
+
+Detect immediately
+
+Roll back or repair
+
+Re-run health checks
+
+Ensure npm run dev works again
+
+Broken builds are unacceptable.
+
+
+1. .cursor/rules.md
+
+Create: .cursor/rules.md
+
+# Cursor Rules – AccessMD / AccessCare
+
+> Cursor acts as CTO + full-stack team. The human is a hands-off CMO and should not be asked to do engineering work.
+
+---
+
+## 1. Global Principles
+
+1. Always keep the repo in a **healthy, runnable state**.
+2. `npm run dev` must **always work** without manual intervention.
+3. Before implementing new features, **fix broken builds, ports, and core flows**.
+4. Never require the user to run manual commands beyond `npm run dev` (or the equivalent single startup command defined in `package.json`).
+5. Prefer **automated scripts**, checks, and CI over ad-hoc fixes.
+
+---
+
+## 2. Tech Stack Baseline
+
+Assume the app is:
+
+- Next.js (App Router) + React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui for components
+- Prisma + Postgres
+- Deployed to Vercel and optionally Railway
+
+Cursor must:
+
+- Keep all configs (Next, Tailwind, Prisma) consistent and valid.
+- Prefer feature-based directory structure under `app/` and `src/`.
+
+---
+
+## 3. Product Context – AccessMD
+
+The app is a Zocdoc-style platform:
+
+- **Brand**: AccessMD
+- **Tagline**: “Healthcare without the wait.”
+- **Roles**:
+  - `PATIENT`
+  - `DOCTOR`
+  - `CLINIC_STAFF`
+  - `ACCESS_ADMIN`
+
+Core flows that must always be functional and tested:
+
+1. Public landing page with doctor search
+2. Doctor search results and doctor profile view
+3. Booking flow: select slot → enter details → confirm
+4. Authentication:
+   - Sign up
+   - Sign in
+   - Email verification
+   - Forgot password / reset password
+5. Role-based dashboards:
+   - Patient dashboard (appointments, reviews, profile)
+   - Doctor / Clinic Staff portal (calendar, availability, clinic page, reviews)
+   - Access Admin panel (providers, onboarding, insurance, reviews, complaints)
+6. Reviews:
+   - Only patients with completed appointments can leave reviews
+   - Admin moderation (approve / reject / flag)
+7. Complaints:
+   - Patient submits
+   - Admin tracks & resolves
+
+Cursor must treat these as **non-negotiable, always-working flows**.
+
+---
+
+## 4. Design & UX Rules
+
+1. Use the existing **AccessMD logo** in the header and key locations.
+2. Do **not** use generic medical blue/Bootstrap aesthetics.
+3. Build an **award-level SaaS UI**, inspired by:
+   - Linear
+   - Vercel
+   - Stripe Dashboard
+   - Doctolib / Zocdoc for patterns
+4. Use Tailwind + shadcn/ui components for:
+   - Buttons
+   - Inputs
+   - Dialogs
+   - Dropdowns
+   - Navigation
+5. Maintain a **custom color system** consistent with the logo:
+
+   - `primary`, `primaryForeground`
+   - `accent`, `accentForeground`
+   - `background`, `foreground`
+   - `muted`, `mutedForeground`
+   - `destructive`, `success`
+
+   Implement via Tailwind + `theme.json` or `globals.css`.
+
+6. All pages must be:
+   - Mobile-first
+   - Accessible (basic a11y: labels, keyboard focus, contrast)
+   - Free of layout shifts and console errors
+
+---
+
+## 5. Dev Server & Repo Health (Autopilot Rules)
+
+Before working on any feature or fix, Cursor must:
+
+1. **Backend Health Check**
+   - Validate `.env` presence and basic structure.
+   - Test DB connection (Prisma).
+   - Run `prisma migrate deploy` if migrations are pending.
+   - Run `prisma generate` if needed.
+   - Ensure there are no obvious runtime errors on server entry.
+
+2. **Frontend Health Check**
+   - Ensure Next.js builds without errors (`next build` or `npm run lint && npm run typecheck` if present).
+   - Ensure Tailwind config is valid.
+   - Ensure shadcn/ui imports are correct.
+   - Fix any missing imports/components.
+
+3. **Port & Dev Startup**
+   - Use `scripts/clean-port.js` and `scripts/start-dev.js` (see repo) to:
+     - Free the default dev port (3000).
+     - Automatically pick the next free port (3000, 3001, 3002, …).
+     - Start Next.js dev server.
+     - Open the browser when ready.
+
+4. **Never** leave the repo in a non-runnable state. If a commit introduces an error:
+   - Fix immediately.
+   - Re-run the health checks.
+   - Confirm `npm run dev` works again.
+
+---
+
+## 6. Git, CI/CD, and Deployments
+
+1. Cursor must handle all git operations:
+   - `git add` relevant files
+   - `git commit -m "..."` with meaningful messages
+   - `git push` to the correct branch
+2. For CI/CD (`.github/workflows/accessmd-ci.yml`):
+   - Ensure the workflow:
+     - Installs dependencies
+     - Runs tests
+     - Runs Prisma commands as appropriate
+     - Builds Next.js
+   - If Vercel / Railway deploy steps exist:
+     - Fix them if broken
+     - Ensure tags/branches are correct
+
+User should not have to touch git or CI/CD once configured.
+
+---
+
+## 7. Code Quality & Structure
+
+1. Use TypeScript everywhere possible.
+2. Validate inputs with Zod for:
+   - API routes
+   - Forms
+   - Critical backend operations
+3. Organize code by feature/domain:
+   - `src/features/auth`
+   - `src/features/search`
+   - `src/features/appointments`
+   - `src/features/reviews`
+   - `src/features/admin`
+4. Maintain minimal but meaningful tests for:
+   - Auth flow
+   - Core booking logic
+   - Doctor search
+5. Keep the codebase free from:
+   - Dead code and unused components
+   - Sprawling “god” files
+   - Console logs in production paths
+
+---
+
+## 8. Cursor Workflow Style
+
+For all larger tasks, Cursor must use **structured task prompting** internally:
+
+- **Context**: Where in the app and why.
+- **Deliverable**: What exactly should exist at the end.
+- **Technical Details**: Libraries, conventions, models, routes.
+- **Acceptance Criteria**: Concrete checks to confirm it works.
+
+This should be reflected in `.cursor/workflows.md` and followed by default.
+
+---
+
+## 9. Communication & Summaries
+
+At the end of each major change set, Cursor must provide a short summary:
+
+- What was added
+- What was changed
+- What was fixed
+- Any new scripts or CI steps
+- How to run the app (should remain: `npm run dev`)
+
+Avoid asking the user for technical input or manual shell commands unless absolutely impossible to infer.
+
+---
+
+2. .cursor/workflows.md
+
+Create: .cursor/workflows.md
+
+# Cursor Workflows – AccessMD
+
+This file defines how Cursor should approach common tasks in this repo.
+
+---
+
+## 1. General Template (Use for ALL non-trivial tasks)
+
+For any substantial change, Cursor should follow this internal structure:
+
+1. **Context**
+   - Where in the system this applies (e.g., patient dashboard, doctor booking, admin moderation).
+   - Why this change is needed (bugfix, new feature, refactor, performance, DX).
+
+2. **Deliverable**
+   - Exact files, routes, and components to be created or updated.
+   - Any database schema changes.
+   - Any new tests to write.
+
+3. **Technical Details**
+   - Next.js app route paths.
+   - Feature modules affected (e.g., `src/features/appointments`).
+   - Prisma models and relations.
+   - Required shadcn/ui components.
+   - Any external services (Vercel, Railway, email provider).
+
+4. **Acceptance Criteria**
+   - How we know the work is done:
+     - Pages render without error.
+     - Flow can be executed end-to-end.
+     - Tests pass.
+     - CI passes.
+     - `npm run dev` still works.
+
+Cursor should explicitly reason using this structure (even if not fully printed in the answer).
+
+---
+
+## 2. Workflow: Implement a New Feature
+
+**Example**: Add “Next available appointment” filter to doctor search.
+
+1. **Context**
+   - AccessMD search: patient-facing, public.
+   - Impacts `/` (search) and `/search` results, plus availability logic.
+
+2. **Deliverable**
+   - Updated search UI with a “Next available” toggle / selector.
+   - Backend query that filters or sorts doctors by earliest availability.
+   - Test(s) for search with “next available” on/off.
+
+3. **Technical Details**
+   - Update React components under `app/(public)/search` or similar.
+   - Add a function in `src/features/search` or `src/features/availability` to compute earliest available slot per doctor.
+   - Ensure Prisma queries use appropriate indices and relations.
+   - Add Zod validation for query params.
+
+4. **Acceptance Criteria**
+   - Searching with “Next available” checked returns doctors ordered by earliest slot.
+   - No crashes on empty availability.
+   - Works on mobile and desktop.
+   - Tests and CI pass.
+
+---
+
+## 3. Workflow: Fix a Bug
+
+**Example**: “Email verification link crashes with 500.”
+
+1. **Context**
+   - Auth flow for new users.
+   - Impacts onboarding for all roles.
+
+2. **Deliverable**
+   - Working email verification endpoint.
+   - Proper success and error states in UI.
+   - Optional: logging around token validation.
+
+3. **Technical Details**
+   - Check API route (e.g., `app/api/auth/verify`).
+   - Confirm Prisma model for verification tokens.
+   - Ensure token expiry is handled.
+   - Ensure errors return structured JSON.
+   - UI uses shadcn/ui alert components for errors.
+
+4. **Acceptance Criteria**
+   - Clicking a valid link → marks user verified → redirects to correct dashboard based on role.
+   - Clicking an expired/invalid link → shows clear error message, no crash.
+   - Tests for valid and invalid tokens.
+   - CI passes.
+
+---
+
+## 4. Workflow: Refactor / Cleanup
+
+**Example**: Extract appointment booking logic into a feature module.
+
+1. **Context**
+   - Booking logic is duplicated or messy across multiple files.
+
+2. **Deliverable**
+   - A consolidated module, e.g. `src/features/appointments/booking.ts`.
+   - Components referencing the shared logic.
+   - No change in external behavior.
+
+3. **Technical Details**
+   - Preserve types, add Zod schemas if missing.
+   - Keep public APIs stable.
+   - Reduce repetition of DB queries.
+
+4. **Acceptance Criteria**
+   - All flows work as before.
+   - Tests unchanged or updated but passing.
+   - Code is easier to navigate and understand.
+
+---
+
+## 5. Workflow: Add a New Page
+
+**Example**: Add `/patient/reviews` management page.
+
+1. **Context**
+   - Patient role, reviewing their doctors and past appointments.
+
+2. **Deliverable**
+   - New route, e.g. `app/(patient)/patient/reviews/page.tsx`.
+   - Component listing completed appointments eligible for review.
+   - Form to submit review, wired to API.
+
+3. **Technical Details**
+   - Use role-based layout for patient.
+   - Fetch data via server components or React Query if used.
+   - Backend route validates:
+     - User is PATIENT
+     - Appointment is COMPLETED
+     - No duplicate review unless editing is allowed.
+
+4. **Acceptance Criteria**
+   - Patient can see past appointments.
+   - Patient can leave or edit reviews where policy allows.
+   - Admin moderation still applies.
+   - No console errors; mobile view works.
+
+---
+
+## 6. Workflow: Adjust Design / UI Overhaul
+
+**Example**: Redesign navigation to be more “SaaS-like”.
+
+1. **Context**
+   - Top-level nav, sidebars, and header components for all roles.
+
+2. **Deliverable**
+   - Shared layout components for:
+     - Public
+     - Patient
+     - Doctor/Clinic Staff
+     - Admin
+   - Consistent branding and typography.
+
+3. **Technical Details**
+   - Use shadcn/ui `NavigationMenu`, `Sheet`, `DropdownMenu`, etc.
+   - Use Tailwind utility classes for spacing and layout.
+   - Make mobile nav explicit (drawer or bottom nav).
+
+4. **Acceptance Criteria**
+   - All pages use the same layouts for their role.
+   - Navigation is intuitive and responsive.
+   - No overlapping headers or scroll issues.
+   - App feels like a cohesive, modern SaaS.
+
+---
+
+## 7. Workflow: Infra / CI / Dev Experience
+
+**Example**: Add or update GitHub Action CI.
+
+1. **Context**
+   - Ensure every push / PR gets validated.
+
+2. **Deliverable**
+   - CI workflow in `.github/workflows/accessmd-ci.yml` that:
+     - Installs dependencies
+     - Runs lint/typecheck/tests
+     - Builds Next.js app
+     - Optionally deploys to Vercel / Railway if configured
+
+3. **Technical Details**
+   - Use Node LTS (e.g., 20.x).
+   - Cache node_modules.
+   - Use environment secrets for DATABASE_URL, VERCEL_TOKEN, etc., when needed.
+
+4. **Acceptance Criteria**
+   - CI passes for clean code.
+   - CI fails when there are build/test errors.
+   - No broken workflows committed.
+
+---
+
+3. Startup Script(s) + package.json wiring
+
+These scripts make sure:
+
+Port is cleaned automatically.
+
+Backend is healthy (Prisma) before dev.
+
+Next dev runs on the first free port (3000+).
+
+Browser opens automatically.
+
+npm run dev is the only thing you need.
+
+3.1. scripts/clean-port.js
+
+Create: scripts/clean-port.js
+
+// scripts/clean-port.js
+// Cleans the default dev port (3000) or a provided port.
+
+const { execSync } = require("child_process");
+
+const port = process.env.PORT || process.argv[2] || 3000;
+const platform = process.platform;
+
+function log(msg) {
+  console.log(`[clean-port] ${msg}`);
+}
+
+try {
+  if (platform === "win32") {
+    // Windows: find PID using netstat, then kill it
+    const output = execSync(`netstat -ano | findstr :${port}`, {
+      encoding: "utf8",
+    });
+
+    const lines = output
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    const pids = new Set();
+
+    for (const line of lines) {
+      const parts = line.split(/\s+/);
+      const pid = parts[parts.length - 1];
+      if (pid && pid !== "0") pids.add(pid);
+    }
+
+    if (pids.size > 0) {
+      log(`Killing PIDs on port ${port}: ${Array.from(pids).join(", ")}`);
+      for (const pid of pids) {
+        try {
+          execSync(`taskkill /PID ${pid} /F`);
+        } catch (e) {
+          // ignore individual failures
+        }
+      }
+    } else {
+      log(`Port ${port} appears to be free.`);
+    }
+  } else {
+    // macOS / Linux
+    try {
+      const pids = execSync(`lsof -ti :${port}`, { encoding: "utf8" })
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean);
+
+      if (pids.length) {
+        log(`Killing PIDs on port ${port}: ${pids.join(", ")}`);
+        execSync(`kill -9 ${pids.join(" ")}`);
+      } else {
+        log(`Port ${port} appears to be free.`);
+      }
+    } catch {
+      log(`Port ${port} appears to be free.`);
+    }
+  }
+} catch (err) {
+  log(`Error while cleaning port ${port}: ${err.message}`);
+}
+
+3.2. scripts/preflight.js
+
+Create: scripts/preflight.js
+
+// scripts/preflight.js
+// Runs basic backend health checks: Prisma migrate + generate, optional tests.
+
+const { execSync } = require("child_process");
+
+function run(cmd, label) {
+  console.log(`[preflight] ${label || cmd}`);
+  try {
+    execSync(cmd, { stdio: "inherit" });
+  } catch (e) {
+    console.error(`[preflight] Failed: ${label || cmd}`);
+    throw e;
+  }
+}
+
+(function main() {
+  try {
+    // Prisma migrate deploy (if prisma is present)
+    try {
+      run("npx prisma migrate deploy", "Prisma migrate deploy");
+      run("npx prisma generate", "Prisma generate");
+    } catch (e) {
+      console.warn("[preflight] Prisma commands failed or prisma not configured. Continuing.");
+    }
+
+    // Optional: run lint/typecheck/tests if scripts exist
+    try {
+      run("npm run lint --if-present", "Lint (if present)");
+    } catch (e) {
+      console.warn("[preflight] Lint failed or not present. Continuing for dev.");
+    }
+
+    try {
+      run("npm run test --if-present", "Tests (if present)");
+    } catch (e) {
+      console.warn("[preflight] Tests failed or not present. Continuing for dev.");
+    }
+
+    console.log("[preflight] Completed.");
+  } catch (e) {
+    console.error("[preflight] Fatal error. Fix before proceeding.");
+    process.exit(1);
+  }
+})();
+
+3.3. scripts/start-dev.js
+
+Create: scripts/start-dev.js
+
+// scripts/start-dev.js
+// Cleans port, runs preflight checks, finds a free port, starts Next dev, opens browser.
+
+const { execSync, spawn } = require("child_process");
+const net = require("net");
+
+const DEFAULT_PORT = 3000;
+const MAX_PORT = 3010;
+
+function log(msg) {
+  console.log(`[start-dev] ${msg}`);
+}
+
+function isPortFree(port) {
+  return new Promise((resolve) => {
+    const server = net.createServer();
+
+    server.once("error", () => {
+      resolve(false);
+    });
+
+    server.once("listening", () => {
+      server.close(() => resolve(true));
+    });
+
+    server.listen(port, "0.0.0.0");
+  });
+}
+
+async function findFreePort() {
+  for (let port = DEFAULT_PORT; port <= MAX_PORT; port++) {
+    // Clean it first in case it's in a weird state
+    try {
+      execSync(`node scripts/clean-port.js ${port}`, { stdio: "inherit" });
+    } catch {
+      // ignore
+    }
+    // Then check if it's free
+    const free = await isPortFree(port);
+    if (free) {
+      return port;
+    }
+  }
+  throw new Error(`No free ports between ${DEFAULT_PORT} and ${MAX_PORT}`);
+}
+
+function openBrowser(url) {
+  const platform = process.platform;
+
+  let cmd;
+  if (platform === "win32") {
+    cmd = `start ${url}`;
+  } else if (platform === "darwin") {
+    cmd = `open ${url}`;
+  } else {
+    cmd = `xdg-open ${url}`;
+  }
+
+  try {
+    execSync(cmd);
+  } catch (e) {
+    log(`Could not open browser automatically: ${e.message}`);
+  }
+}
+
+async function main() {
+  try {
+    // Run preflight checks
+    try {
+      execSync("node scripts/preflight.js", { stdio: "inherit" });
+    } catch (e) {
+      log("Preflight failed. Fix issues before continuing.");
+      process.exit(1);
+    }
+
+    const port = await findFreePort();
+    log(`Starting Next.js dev server on port ${port}...`);
+
+    const devProcess = spawn("npx", ["next", "dev", "-p", String(port)], {
+      stdio: "inherit",
+      env: {
+        ...process.env,
+        PORT: String(port),
+      },
+    });
+
+    // Open browser shortly after server starts
+    setTimeout(() => {
+      const url = `http://localhost:${port}`;
+      log(`Opening browser at ${url}`);
+      openBrowser(url);
+    }, 4000);
+
+    devProcess.on("close", (code) => {
+      log(`Next dev process exited with code ${code}`);
+      process.exit(code ?? 0);
+    });
+  } catch (err) {
+    console.error(`[start-dev] Fatal error: ${err.message}`);
+    process.exit(1);
+  }
+}
+
+main();
+
+3.4. package.json script wiring
+
+Update package.json:
+
+{
+  "scripts": {
+    "clean-port": "node scripts/clean-port.js",
+    "preflight": "node scripts/preflight.js",
+    "dev": "node scripts/start-dev.js",
+    "build": "next build",
+    "start": "next start"
+    // keep any existing scripts like lint, test, etc.
+  }
+}
+
+
+From now on, you only run:
+
+npm run dev
+
+
+Cursor should keep these scripts healthy and update them as needed.
+
+4. CI/CD GitHub Action for AccessMD
+
+Create: .github/workflows/accessmd-ci.yml
+
+name: AccessMD CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      NEXT_TELEMETRY_DISABLED: "1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prisma generate
+        run: npx prisma generate
+        if: hashFiles('prisma/schema.prisma') != ''
+
+      - name: Prisma migrate (optional)
+        run: npx prisma migrate deploy
+        if: hashFiles('prisma/schema.prisma') != ''
+
+      - name: Lint (if present)
+        run: npm run lint --if-present
+
+      - name: Tests (if present)
+        run: npm run test --if-present
+
+      - name: Typecheck (if present)
+        run: npm run typecheck --if-present
+
+      - name: Build Next.js
+        run: npm run build
+
+  # Optional deployment job to Vercel – enable/configure if desired
+  deploy_vercel:
+    name: Deploy to Vercel
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy with Vercel
+        run: |
+          npx vercel pull --yes --environment=production --token=${VERCEL_TOKEN}
+          npx vercel build --prod --token=${VERCEL_TOKEN}
+          npx vercel deploy --prebuilt --prod --token=${VERCEL_TOKEN}
+
+  # Optional deployment job to Railway – enable/configure if desired
+  deploy_railway:
+    name: Deploy to Railway
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Railway Up
+        uses: railwayapp/railway-action@v0
+        with:
+          service: accessmd
+          token: ${{ secrets.RAILWAY_TOKEN }}
+
+
+Cursor can tweak service names, secrets, and branches once it sees your exact setup, but this is a solid default.
